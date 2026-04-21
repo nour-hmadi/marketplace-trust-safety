@@ -1,0 +1,44 @@
+[
+  {
+    "complaint_id": "CMP44",
+    "seller_id": "S55",
+    "timestamp": "2026-01-09T09:10:00",
+    "severity": "high",
+    "category": "counterfeit_claim"
+  },
+  {
+    "complaint_id": "CMP45",
+    "seller_id": "S56",
+    "timestamp": "2026-01-10T11:00:00",
+    "severity": "medium",
+    "category": "late_delivery"
+  },
+  {
+    "complaint_id": "CMP46",
+    "seller_id": "S56",
+    "timestamp": "2026-01-11T14:30:00",
+    "severity": "high",
+    "category": "counterfeit_claim"
+  },
+  {
+    "complaint_id": "CMP47",
+    "seller_id": "S58",
+    "timestamp": "2026-01-12T08:45:00",
+    "severity": "high",
+    "category": "fraud"
+  },
+  {
+    "complaint_id": "CMP48",
+    "seller_id": "S58",
+    "timestamp": "2026-01-13T16:20:00",
+    "severity": "high",
+    "category": "counterfeit_claim"
+  },
+  {
+    "complaint_id": "CMP49",
+    "seller_id": "S57",
+    "timestamp": "2026-01-14T10:00:00",
+    "severity": "low",
+    "category": "wrong_item"
+  }
+]
