@@ -25,6 +25,5 @@ df_clean.write \
     .mode("overwrite") \
     .parquet("hdfs://namenode:9000/data/refined/orders/")
 
-spark.sql("MSCK REPAIR TABLE refined.orders")
 print("Done: normalize_orders")
 spark.stop()
