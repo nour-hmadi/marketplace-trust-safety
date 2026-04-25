@@ -53,3 +53,11 @@ echo ""
 echo "================================================"
 echo " DEMO COMPLETE! Dashboard updated in browser."
 echo "================================================"
+
+echo ""
+echo ">>> STEP 6: Regenerating dashboard with new data..."
+docker cp spark_jobs/generate_dashboard.py spark-master:/opt/spark_jobs/
+docker exec spark-master /spark/bin/spark-submit --master spark://spark-master:7077 /opt/spark_jobs/generate_dashboard.py 2>/dev/null
+docker cp spark-master:/tmp/dashboard.html docs/geo_risk_dashboard.html
+xdg-open docs/geo_risk_dashboard.html
+echo "Dashboard updated!"
