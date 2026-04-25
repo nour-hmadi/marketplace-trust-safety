@@ -1,44 +1,146 @@
-[
-  {
-    "complaint_id": "CMP44",
-    "seller_id": "S55",
-    "timestamp": "2026-01-09T09:10:00",
-    "severity": "high",
-    "category": "counterfeit_claim"
-  },
-  {
-    "complaint_id": "CMP45",
-    "seller_id": "S56",
-    "timestamp": "2026-01-10T11:00:00",
-    "severity": "medium",
-    "category": "late_delivery"
-  },
-  {
-    "complaint_id": "CMP46",
-    "seller_id": "S56",
-    "timestamp": "2026-01-11T14:30:00",
-    "severity": "high",
-    "category": "counterfeit_claim"
-  },
-  {
-    "complaint_id": "CMP47",
-    "seller_id": "S58",
-    "timestamp": "2026-01-12T08:45:00",
-    "severity": "high",
-    "category": "fraud"
-  },
-  {
-    "complaint_id": "CMP48",
-    "seller_id": "S58",
-    "timestamp": "2026-01-13T16:20:00",
-    "severity": "high",
-    "category": "counterfeit_claim"
-  },
-  {
-    "complaint_id": "CMP49",
-    "seller_id": "S57",
-    "timestamp": "2026-01-14T10:00:00",
-    "severity": "low",
-    "category": "wrong_item"
-  }
-]
+{"complaint_id": "CMP1000", "seller_id": "S55", "timestamp": "2026-01-28T06:25:05", "severity": "low", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1001", "seller_id": "S55", "timestamp": "2026-02-18T14:46:41", "severity": "low", "category": "fraud"}
+{"complaint_id": "CMP1002", "seller_id": "S55", "timestamp": "2026-04-07T08:14:28", "severity": "high", "category": "late_delivery"}
+{"complaint_id": "CMP1003", "seller_id": "S55", "timestamp": "2026-02-03T06:43:15", "severity": "high", "category": "poor_quality"}
+{"complaint_id": "CMP1004", "seller_id": "S55", "timestamp": "2026-01-28T22:11:52", "severity": "low", "category": "wrong_item"}
+{"complaint_id": "CMP1005", "seller_id": "S55", "timestamp": "2026-02-16T01:36:08", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1006", "seller_id": "S55", "timestamp": "2026-03-25T06:56:39", "severity": "high", "category": "poor_quality"}
+{"complaint_id": "CMP1007", "seller_id": "S55", "timestamp": "2026-02-14T03:27:51", "severity": "high", "category": "poor_quality"}
+{"complaint_id": "CMP1008", "seller_id": "S55", "timestamp": "2026-03-07T13:41:27", "severity": "low", "category": "poor_quality"}
+{"complaint_id": "CMP1009", "seller_id": "S55", "timestamp": "2026-03-24T01:13:38", "severity": "high", "category": "wrong_item"}
+{"complaint_id": "CMP1010", "seller_id": "S56", "timestamp": "2026-04-09T12:17:17", "severity": "medium", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1011", "seller_id": "S56", "timestamp": "2026-02-27T20:58:48", "severity": "high", "category": "wrong_item"}
+{"complaint_id": "CMP1012", "seller_id": "S56", "timestamp": "2026-02-15T17:51:22", "severity": "medium", "category": "late_delivery"}
+{"complaint_id": "CMP1013", "seller_id": "S56", "timestamp": "2026-02-03T20:15:08", "severity": "medium", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1014", "seller_id": "S56", "timestamp": "2026-03-01T16:37:17", "severity": "medium", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1015", "seller_id": "S56", "timestamp": "2026-02-20T12:31:01", "severity": "medium", "category": "poor_quality"}
+{"complaint_id": "CMP1016", "seller_id": "S56", "timestamp": "2026-03-18T21:38:27", "severity": "high", "category": "wrong_item"}
+{"complaint_id": "CMP1017", "seller_id": "S56", "timestamp": "2026-02-02T11:45:23", "severity": "high", "category": "wrong_item"}
+{"complaint_id": "CMP1018", "seller_id": "S56", "timestamp": "2026-04-16T08:47:30", "severity": "low", "category": "fraud"}
+{"complaint_id": "CMP1019", "seller_id": "S56", "timestamp": "2026-04-21T19:23:27", "severity": "low", "category": "poor_quality"}
+{"complaint_id": "CMP1020", "seller_id": "S56", "timestamp": "2026-02-13T12:12:13", "severity": "medium", "category": "poor_quality"}
+{"complaint_id": "CMP1021", "seller_id": "S56", "timestamp": "2026-01-30T06:55:02", "severity": "low", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1022", "seller_id": "S56", "timestamp": "2026-04-10T21:31:07", "severity": "low", "category": "late_delivery"}
+{"complaint_id": "CMP1023", "seller_id": "S56", "timestamp": "2026-04-18T21:10:25", "severity": "medium", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1024", "seller_id": "S56", "timestamp": "2026-03-03T17:53:49", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1025", "seller_id": "S56", "timestamp": "2026-03-28T13:23:27", "severity": "medium", "category": "wrong_item"}
+{"complaint_id": "CMP1026", "seller_id": "S56", "timestamp": "2026-03-02T18:43:23", "severity": "medium", "category": "late_delivery"}
+{"complaint_id": "CMP1027", "seller_id": "S56", "timestamp": "2026-03-31T21:45:36", "severity": "medium", "category": "late_delivery"}
+{"complaint_id": "CMP1028", "seller_id": "S56", "timestamp": "2026-03-25T23:31:01", "severity": "medium", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1029", "seller_id": "S56", "timestamp": "2026-03-18T16:46:30", "severity": "low", "category": "late_delivery"}
+{"complaint_id": "CMP1030", "seller_id": "S56", "timestamp": "2026-02-10T16:53:39", "severity": "low", "category": "late_delivery"}
+{"complaint_id": "CMP1031", "seller_id": "S56", "timestamp": "2026-02-21T01:09:46", "severity": "medium", "category": "wrong_item"}
+{"complaint_id": "CMP1032", "seller_id": "S56", "timestamp": "2026-02-16T03:52:45", "severity": "low", "category": "poor_quality"}
+{"complaint_id": "CMP1033", "seller_id": "S56", "timestamp": "2026-04-17T16:07:34", "severity": "low", "category": "fraud"}
+{"complaint_id": "CMP1034", "seller_id": "S57", "timestamp": "2026-04-15T15:04:39", "severity": "high", "category": "late_delivery"}
+{"complaint_id": "CMP1035", "seller_id": "S57", "timestamp": "2026-03-05T18:55:14", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1036", "seller_id": "S57", "timestamp": "2026-02-15T07:45:52", "severity": "medium", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1037", "seller_id": "S57", "timestamp": "2026-02-15T11:35:40", "severity": "low", "category": "fraud"}
+{"complaint_id": "CMP1038", "seller_id": "S58", "timestamp": "2026-04-21T17:36:00", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1039", "seller_id": "S58", "timestamp": "2026-02-20T13:21:15", "severity": "medium", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1040", "seller_id": "S58", "timestamp": "2026-04-08T08:48:26", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1041", "seller_id": "S58", "timestamp": "2026-03-01T23:39:06", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1042", "seller_id": "S58", "timestamp": "2026-03-16T07:25:16", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1043", "seller_id": "S58", "timestamp": "2026-04-19T10:39:14", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1044", "seller_id": "S58", "timestamp": "2026-04-12T17:49:03", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1045", "seller_id": "S58", "timestamp": "2026-03-04T04:42:42", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1046", "seller_id": "S58", "timestamp": "2026-03-18T05:03:52", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1047", "seller_id": "S58", "timestamp": "2026-04-01T21:18:50", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1048", "seller_id": "S58", "timestamp": "2026-04-10T11:06:13", "severity": "low", "category": "fraud"}
+{"complaint_id": "CMP1049", "seller_id": "S58", "timestamp": "2026-02-23T08:02:37", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1050", "seller_id": "S58", "timestamp": "2026-01-26T03:42:03", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1051", "seller_id": "S58", "timestamp": "2026-03-15T10:35:20", "severity": "low", "category": "fraud"}
+{"complaint_id": "CMP1052", "seller_id": "S58", "timestamp": "2026-04-20T08:35:39", "severity": "low", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1053", "seller_id": "S58", "timestamp": "2026-02-09T16:16:48", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1054", "seller_id": "S58", "timestamp": "2026-03-19T04:58:59", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1055", "seller_id": "S58", "timestamp": "2026-03-24T23:46:51", "severity": "low", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1056", "seller_id": "S58", "timestamp": "2026-02-05T16:48:34", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1057", "seller_id": "S58", "timestamp": "2026-01-31T11:06:51", "severity": "medium", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1058", "seller_id": "S58", "timestamp": "2026-02-03T03:43:33", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1059", "seller_id": "S58", "timestamp": "2026-02-07T07:18:45", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1060", "seller_id": "S58", "timestamp": "2026-02-20T13:45:56", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1061", "seller_id": "S58", "timestamp": "2026-02-15T09:39:52", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1062", "seller_id": "S58", "timestamp": "2026-04-05T01:25:49", "severity": "low", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1063", "seller_id": "S58", "timestamp": "2026-03-09T08:59:09", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1064", "seller_id": "S58", "timestamp": "2026-02-18T21:48:03", "severity": "medium", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1065", "seller_id": "S58", "timestamp": "2026-01-27T21:09:08", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1066", "seller_id": "S58", "timestamp": "2026-03-23T23:18:13", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1067", "seller_id": "S58", "timestamp": "2026-04-04T13:31:40", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1068", "seller_id": "S58", "timestamp": "2026-02-01T09:11:34", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1069", "seller_id": "S58", "timestamp": "2026-03-16T18:12:34", "severity": "medium", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1070", "seller_id": "S58", "timestamp": "2026-02-15T15:20:48", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1071", "seller_id": "S58", "timestamp": "2026-02-18T10:21:48", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1072", "seller_id": "S58", "timestamp": "2026-02-03T23:56:02", "severity": "medium", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1073", "seller_id": "S58", "timestamp": "2026-03-01T05:42:43", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1074", "seller_id": "S58", "timestamp": "2026-04-19T17:01:27", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1075", "seller_id": "S58", "timestamp": "2026-01-31T17:22:35", "severity": "low", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1076", "seller_id": "S58", "timestamp": "2026-04-13T13:39:16", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1077", "seller_id": "S58", "timestamp": "2026-02-13T07:21:27", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1078", "seller_id": "S58", "timestamp": "2026-03-07T19:11:39", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1079", "seller_id": "S58", "timestamp": "2026-02-19T02:13:48", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1080", "seller_id": "S58", "timestamp": "2026-04-14T06:58:01", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1081", "seller_id": "S58", "timestamp": "2026-01-30T18:01:05", "severity": "low", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1082", "seller_id": "S58", "timestamp": "2026-02-03T21:27:24", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1083", "seller_id": "S58", "timestamp": "2026-03-06T07:09:08", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1084", "seller_id": "S58", "timestamp": "2026-04-19T18:55:13", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1085", "seller_id": "S58", "timestamp": "2026-02-10T19:46:16", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1086", "seller_id": "S58", "timestamp": "2026-02-20T14:06:24", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1087", "seller_id": "S58", "timestamp": "2026-03-07T21:49:03", "severity": "medium", "category": "fraud"}
+{"complaint_id": "CMP1088", "seller_id": "S58", "timestamp": "2026-02-09T20:50:29", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1089", "seller_id": "S58", "timestamp": "2026-01-31T12:24:53", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1090", "seller_id": "S58", "timestamp": "2026-04-08T11:02:53", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1091", "seller_id": "S58", "timestamp": "2026-03-23T13:22:16", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1092", "seller_id": "S58", "timestamp": "2026-01-31T08:40:40", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1093", "seller_id": "S58", "timestamp": "2026-02-01T11:48:18", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1094", "seller_id": "S58", "timestamp": "2026-03-06T01:00:14", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1095", "seller_id": "S58", "timestamp": "2026-03-23T01:07:05", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1096", "seller_id": "S58", "timestamp": "2026-03-07T13:00:13", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1097", "seller_id": "S58", "timestamp": "2026-02-20T03:46:01", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1098", "seller_id": "S59", "timestamp": "2026-02-18T00:19:02", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1099", "seller_id": "S59", "timestamp": "2026-02-07T13:06:26", "severity": "medium", "category": "wrong_item"}
+{"complaint_id": "CMP1100", "seller_id": "S60", "timestamp": "2026-03-11T05:32:57", "severity": "low", "category": "fraud"}
+{"complaint_id": "CMP1101", "seller_id": "S60", "timestamp": "2026-01-26T17:50:43", "severity": "medium", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1102", "seller_id": "S60", "timestamp": "2026-03-21T12:00:32", "severity": "medium", "category": "poor_quality"}
+{"complaint_id": "CMP1103", "seller_id": "S60", "timestamp": "2026-03-19T00:55:04", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1104", "seller_id": "S60", "timestamp": "2026-02-20T14:06:02", "severity": "high", "category": "poor_quality"}
+{"complaint_id": "CMP1105", "seller_id": "S60", "timestamp": "2026-04-21T08:42:04", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1106", "seller_id": "S60", "timestamp": "2026-03-02T17:11:57", "severity": "high", "category": "late_delivery"}
+{"complaint_id": "CMP1107", "seller_id": "S60", "timestamp": "2026-03-09T09:10:58", "severity": "medium", "category": "late_delivery"}
+{"complaint_id": "CMP1108", "seller_id": "S61", "timestamp": "2026-03-26T05:27:04", "severity": "low", "category": "fraud"}
+{"complaint_id": "CMP1109", "seller_id": "S61", "timestamp": "2026-03-31T16:22:22", "severity": "low", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1110", "seller_id": "S61", "timestamp": "2026-04-21T02:19:22", "severity": "medium", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1111", "seller_id": "S61", "timestamp": "2026-04-22T05:19:11", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1112", "seller_id": "S61", "timestamp": "2026-02-21T06:45:22", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1113", "seller_id": "S61", "timestamp": "2026-04-05T12:17:47", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1114", "seller_id": "S61", "timestamp": "2026-03-15T21:49:38", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1115", "seller_id": "S61", "timestamp": "2026-02-03T19:12:35", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1116", "seller_id": "S61", "timestamp": "2026-01-30T02:52:06", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1117", "seller_id": "S61", "timestamp": "2026-03-28T16:43:14", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1118", "seller_id": "S61", "timestamp": "2026-03-20T09:38:50", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1119", "seller_id": "S61", "timestamp": "2026-02-05T16:49:26", "severity": "low", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1120", "seller_id": "S61", "timestamp": "2026-03-19T19:27:23", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1121", "seller_id": "S61", "timestamp": "2026-03-23T09:29:04", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1122", "seller_id": "S61", "timestamp": "2026-02-07T05:06:30", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1123", "seller_id": "S61", "timestamp": "2026-04-23T02:55:03", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1124", "seller_id": "S61", "timestamp": "2026-02-15T05:39:09", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1125", "seller_id": "S61", "timestamp": "2026-03-01T04:16:11", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1126", "seller_id": "S61", "timestamp": "2026-04-25T17:19:29", "severity": "medium", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1127", "seller_id": "S61", "timestamp": "2026-04-21T09:59:15", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1128", "seller_id": "S61", "timestamp": "2026-04-07T08:27:30", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1129", "seller_id": "S61", "timestamp": "2026-02-20T17:50:28", "severity": "medium", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1130", "seller_id": "S61", "timestamp": "2026-03-03T23:31:32", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1131", "seller_id": "S61", "timestamp": "2026-02-14T05:10:38", "severity": "medium", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1132", "seller_id": "S61", "timestamp": "2026-02-24T11:17:06", "severity": "medium", "category": "fraud"}
+{"complaint_id": "CMP1133", "seller_id": "S61", "timestamp": "2026-01-28T03:16:51", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1134", "seller_id": "S61", "timestamp": "2026-02-26T17:02:40", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1135", "seller_id": "S61", "timestamp": "2026-04-10T22:07:14", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP1136", "seller_id": "S61", "timestamp": "2026-04-01T19:31:51", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1137", "seller_id": "S61", "timestamp": "2026-01-28T12:27:10", "severity": "low", "category": "fraud"}
+{"complaint_id": "CMP1138", "seller_id": "S61", "timestamp": "2026-02-12T04:13:55", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1139", "seller_id": "S61", "timestamp": "2026-01-29T13:17:04", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1140", "seller_id": "S61", "timestamp": "2026-02-28T09:38:53", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1141", "seller_id": "S61", "timestamp": "2026-03-25T16:42:28", "severity": "medium", "category": "fraud"}
+{"complaint_id": "CMP1142", "seller_id": "S61", "timestamp": "2026-04-23T04:08:12", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1143", "seller_id": "S61", "timestamp": "2026-01-30T03:34:01", "severity": "high", "category": "fraud"}
+{"complaint_id": "CMP1144", "seller_id": "S62", "timestamp": "2026-01-26T00:04:47", "severity": "low", "category": "wrong_item"}
+{"complaint_id": "CMP1145", "seller_id": "S62", "timestamp": "2026-04-02T12:37:55", "severity": "low", "category": "poor_quality"}

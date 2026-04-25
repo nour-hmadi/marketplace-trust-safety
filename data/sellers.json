@@ -1,47 +1,8 @@
-[
-  {
-    "seller_id": "S55",
-    "seller_name": "TechZone Store",
-    "registration_date": "2023-01-15",
-    "region": "North America",
-    "category": "electronics",
-    "verification_status": "verified",
-    "support_tier": "gold"
-  },
-  {
-    "seller_id": "S56",
-    "seller_name": "QuickDeals",
-    "registration_date": "2024-03-10",
-    "region": "Europe",
-    "category": "clothing",
-    "verification_status": "unverified",
-    "support_tier": "basic"
-  },
-  {
-    "seller_id": "S57",
-    "seller_name": "MegaSupplies",
-    "registration_date": "2022-07-20",
-    "region": "Asia",
-    "category": "home_goods",
-    "verification_status": "verified",
-    "support_tier": "silver"
-  },
-  {
-    "seller_id": "S58",
-    "seller_name": "BudgetFinds",
-    "registration_date": "2024-11-01",
-    "region": "Middle East",
-    "category": "electronics",
-    "verification_status": "unverified",
-    "support_tier": "basic"
-  },
-  {
-    "seller_id": "S59",
-    "seller_name": "LuxuryGoods",
-    "registration_date": "2021-05-18",
-    "region": "Europe",
-    "category": "luxury",
-    "verification_status": "verified",
-    "support_tier": "platinum"
-  }
-]
+{"seller_id": "S55", "seller_name": "TechZone Store", "registration_date": "2023-01-15", "region": "North America", "category": "electronics", "verification_status": "verified", "support_tier": "gold"}
+{"seller_id": "S56", "seller_name": "QuickDeals", "registration_date": "2024-03-10", "region": "Europe", "category": "clothing", "verification_status": "unverified", "support_tier": "basic"}
+{"seller_id": "S57", "seller_name": "MegaSupplies", "registration_date": "2022-07-20", "region": "Asia", "category": "home_goods", "verification_status": "verified", "support_tier": "silver"}
+{"seller_id": "S58", "seller_name": "BudgetFinds", "registration_date": "2024-11-01", "region": "Middle East", "category": "electronics", "verification_status": "unverified", "support_tier": "basic"}
+{"seller_id": "S59", "seller_name": "LuxuryGoods", "registration_date": "2021-05-18", "region": "Europe", "category": "luxury", "verification_status": "verified", "support_tier": "platinum"}
+{"seller_id": "S60", "seller_name": "FastShip Co", "registration_date": "2023-06-01", "region": "North America", "category": "electronics", "verification_status": "verified", "support_tier": "silver"}
+{"seller_id": "S61", "seller_name": "CheapGoods", "registration_date": "2025-01-10", "region": "Asia", "category": "clothing", "verification_status": "unverified", "support_tier": "basic"}
+{"seller_id": "S62", "seller_name": "PremiumHub", "registration_date": "2020-03-15", "region": "Europe", "category": "luxury", "verification_status": "verified", "support_tier": "platinum"}
