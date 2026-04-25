@@ -22,7 +22,7 @@ for d in data:
     if r not in regions:
         regions[r] = {'sellers':[], 'total':0}
     regions[r]['sellers'].append(d['seller_name'])
-    regions[r]['total'] += d['risk_score']
+    regions[r]['total'] += d['risk_index']
 
 region_avg = {r: v['total']/len(v['sellers']) for r,v in regions.items()}
 
@@ -38,7 +38,7 @@ def risk_text(label):
 region_cards = ""
 for r, v in sorted(regions.items(), key=lambda x: -region_avg[x[0]]):
     avg = region_avg[r]
-    label = 'HIGH' if avg >= 60 else 'MEDIUM' if avg >= 30 else 'LOW'
+    label = 'HIGH' if avg >= 70 else 'MEDIUM' if avg >= 40 else 'LOW'
     region_cards += f"""
     <div style="background:white;border:1px solid #e2e8f0;border-left:4px solid {risk_color(label)};border-radius:10px;padding:16px">
         <div style="font-weight:600;font-size:14px">{r}</div>
