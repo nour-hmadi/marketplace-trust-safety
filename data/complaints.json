@@ -176,3 +176,13 @@
 {"complaint_id": "CMP99107", "seller_id": "S62", "timestamp": "2026-04-24T01:52:25", "severity": "high", "category": "counterfeit_claim"}
 {"complaint_id": "CMP99108", "seller_id": "S62", "timestamp": "2026-04-24T01:52:25", "severity": "high", "category": "counterfeit_claim"}
 {"complaint_id": "CMP99109", "seller_id": "S62", "timestamp": "2026-04-25T01:52:25", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP99100", "seller_id": "S62", "timestamp": "2026-04-19T02:35:05", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP99101", "seller_id": "S62", "timestamp": "2026-04-25T02:35:05", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP99102", "seller_id": "S62", "timestamp": "2026-04-22T02:35:05", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP99103", "seller_id": "S62", "timestamp": "2026-04-21T02:35:05", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP99104", "seller_id": "S62", "timestamp": "2026-04-21T02:35:05", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP99105", "seller_id": "S62", "timestamp": "2026-04-19T02:35:05", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP99106", "seller_id": "S62", "timestamp": "2026-04-24T02:35:05", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP99107", "seller_id": "S62", "timestamp": "2026-04-24T02:35:05", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP99108", "seller_id": "S62", "timestamp": "2026-04-24T02:35:05", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP99109", "seller_id": "S62", "timestamp": "2026-04-25T02:35:05", "severity": "high", "category": "counterfeit_claim"}
