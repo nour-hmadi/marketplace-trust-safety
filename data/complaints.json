@@ -144,3 +144,15 @@
 {"complaint_id": "CMP1143", "seller_id": "S61", "timestamp": "2026-01-30T03:34:01", "severity": "high", "category": "fraud"}
 {"complaint_id": "CMP1144", "seller_id": "S62", "timestamp": "2026-01-26T00:04:47", "severity": "low", "category": "wrong_item"}
 {"complaint_id": "CMP1145", "seller_id": "S62", "timestamp": "2026-04-02T12:37:55", "severity": "low", "category": "poor_quality"}
+{"complaint_id": "CMP9100", "seller_id": "S62", "timestamp": "2026-04-23T01:39:25", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP9101", "seller_id": "S62", "timestamp": "2026-04-21T01:39:25", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP9102", "seller_id": "S62", "timestamp": "2026-04-22T01:39:25", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP9103", "seller_id": "S62", "timestamp": "2026-04-19T01:39:25", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP9104", "seller_id": "S62", "timestamp": "2026-04-19T01:39:25", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP9105", "seller_id": "S62", "timestamp": "2026-04-24T01:39:25", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP9106", "seller_id": "S62", "timestamp": "2026-04-23T01:39:25", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP9107", "seller_id": "S62", "timestamp": "2026-04-20T01:39:25", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP9108", "seller_id": "S62", "timestamp": "2026-04-22T01:39:25", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP9109", "seller_id": "S62", "timestamp": "2026-04-25T01:39:25", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP9110", "seller_id": "S62", "timestamp": "2026-04-24T01:39:25", "severity": "high", "category": "counterfeit_claim"}
+{"complaint_id": "CMP9111", "seller_id": "S62", "timestamp": "2026-04-20T01:39:25", "severity": "high", "category": "counterfeit_claim"}
