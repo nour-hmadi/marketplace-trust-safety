@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Trust & Safety - Geographic Risk Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: system-ui, sans-serif; background: #f8fafc; color: #1e293b; padding: 30px; }
+h1 { font-size: 24px; font-weight: 600; margin-bottom: 4px; }
+.sub { color: #64748b; font-size: 14px; margin-bottom: 24px; }
+.metrics { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 24px; }
+.metric { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; }
+.metric .label { font-size: 12px; color: #64748b; margin-bottom: 6px; }
+.metric .value { font-size: 28px; font-weight: 600; }
+.charts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+.card { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; }
+.card h3 { font-size: 14px; font-weight: 600; margin-bottom: 16px; }
+.regions { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; margin-bottom: 24px; }
+.region { background: white; border: 1px solid #e2e8f0; border-left: 4px solid; border-radius: 10px; padding: 16px; }
+table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; border: 1px solid #e2e8f0; }
+th { text-align: left; padding: 10px 14px; font-size: 11px; color: #64748b; font-weight: 500; border-bottom: 1px solid #e2e8f0; }
+td { padding: 12px 14px; font-size: 13px; border-bottom: 1px solid #f1f5f9; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+</style>
+</head>
+<body>
+<h1>Trust & Safety — Geographic Risk Dashboard</h1>
+<p class="sub">Seller risk analysis · 635 orders · 8 sellers · 4 regions</p>
+<div class="metrics">
+  <div class="metric"><div class="label">Total sellers</div><div class="value" style="color:#3b82f6">8</div></div>
+  <div class="metric"><div class="label">High risk</div><div class="value" style="color:#ef4444">5</div></div>
+  <div class="metric"><div class="label">Medium risk</div><div class="value" style="color:#f59e0b">1</div></div>
+  <div class="metric"><div class="label">Avg risk score</div><div class="value" style="color:#8b5cf6">194.4</div></div>
+</div>
+<div class="charts">
+  <div class="card"><h3>Risk score by seller</h3><div style="position:relative;height:220px"><canvas id="c1" role="img" aria-label="Bar chart of risk scores">BudgetFinds 748, CheapGoods 442, TechZone 113, QuickDeals 106, FastShip 79, MegaSupplies 48, LuxuryGoods 15, PremiumHub 0</canvas></div></div>
+  <div class="card"><h3>Risk distribution by region</h3><div style="position:relative;height:220px"><canvas id="c2" role="img" aria-label="Doughnut chart of regional risk">Middle East 748, Asia 491, North America 193, Europe 122</canvas></div></div>
+</div>
+<div class="regions">
+  <div class="region" style="border-left-color:#ef4444"><div style="font-weight:600">Middle East</div><div style="font-size:28px;font-weight:700;color:#ef4444;margin:8px 0">748.2</div><div style="font-size:12px;color:#64748b">BudgetFinds · 1 seller</div><span class="badge" style="background:#fee2e2;color:#b91c1c;margin-top:8px;display:inline-block">HIGH RISK</span></div>
+  <div class="region" style="border-left-color:#ef4444"><div style="font-weight:600">Asia</div><div style="font-size:28px;font-weight:700;color:#ef4444;margin:8px 0">245.6</div><div style="font-size:12px;color:#64748b">MegaSupplies, CheapGoods · 2 sellers</div><span class="badge" style="background:#fee2e2;color:#b91c1c;margin-top:8px;display:inline-block">HIGH RISK</span></div>
+  <div class="region" style="border-left-color:#ef4444"><div style="font-weight:600">North America</div><div style="font-size:28px;font-weight:700;color:#ef4444;margin:8px 0">96.6</div><div style="font-size:12px;color:#64748b">TechZone Store, FastShip Co · 2 sellers</div><span class="badge" style="background:#fee2e2;color:#b91c1c;margin-top:8px;display:inline-block">HIGH RISK</span></div>
+  <div class="region" style="border-left-color:#22c55e"><div style="font-weight:600">Europe</div><div style="font-size:28px;font-weight:700;color:#22c55e;margin:8px 0">40.7</div><div style="font-size:12px;color:#64748b">QuickDeals, LuxuryGoods, PremiumHub · 3 sellers</div><span class="badge" style="background:#dcfce7;color:#15803d;margin-top:8px;display:inline-block">MEDIUM RISK</span></div>
+</div>
+<table>
+  <thead><tr><th>#</th><th>Seller</th><th>Region</th><th>Status</th><th>Return rate</th><th>Risk score</th><th>Label</th></tr></thead>
+  <tbody id="tb"></tbody>
+</table>
+<script>
+const data=[
+  {name:'BudgetFinds',id:'S58',region:'Middle East',status:'unverified',rr:45.5,score:748.2,label:'HIGH'},
+  {name:'CheapGoods',id:'S61',region:'Asia',status:'unverified',rr:43.9,score:442.6,label:'HIGH'},
+  {name:'TechZone Store',id:'S55',region:'North America',status:'verified',rr:22.2,score:113.9,label:'HIGH'},
+  {name:'QuickDeals',id:'S56',region:'Europe',status:'unverified',rr:28.2,score:106.3,label:'HIGH'},
+  {name:'FastShip Co',id:'S60',region:'North America',status:'verified',rr:11.0,score:79.4,label:'HIGH'},
+  {name:'MegaSupplies',id:'S57',region:'Asia',status:'verified',rr:9.3,score:48.7,label:'MEDIUM'},
+  {name:'LuxuryGoods',id:'S59',region:'Europe',status:'verified',rr:2.2,score:15.9,label:'LOW'},
+  {name:'PremiumHub',id:'S62',region:'Europe',status:'verified',rr:0.0,score:0.0,label:'LOW'},
+];
+const lc={HIGH:'#ef4444',MEDIUM:'#f59e0b',LOW:'#22c55e'};
+const lb={HIGH:'#fee2e2',MEDIUM:'#fef3c7',LOW:'#dcfce7'};
+const lt={HIGH:'#b91c1c',MEDIUM:'#92400e',LOW:'#15803d'};
+const tb=document.getElementById('tb');
+data.forEach((d,i)=>{
+  tb.innerHTML+=`<tr><td>${i+1}</td><td><b>${d.name}</b><br><span style="color:#94a3b8;font-size:11px">${d.id}</span></td><td>${d.region}</td><td style="color:${d.status==='verified'?'#22c55e':'#ef4444'}">${d.status}</td><td style="color:${d.rr>40?'#ef4444':d.rr>20?'#f59e0b':'#22c55e'}">${d.rr.toFixed(1)}%</td><td style="font-weight:600;color:${lc[d.label]}">${d.score.toFixed(1)}</td><td><span class="badge" style="background:${lb[d.label]};color:${lt[d.label]}">${d.label}</span></td></tr>`;
+});
+new Chart(document.getElementById('c1'),{type:'bar',data:{labels:data.map(d=>d.name),datasets:[{data:data.map(d=>d.score),backgroundColor:data.map(d=>d.label==='HIGH'?'rgba(239,68,68,0.7)':d.label==='MEDIUM'?'rgba(245,158,11,0.7)':'rgba(34,197,94,0.7)'),borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10},maxRotation:35,autoSkip:false}},y:{grid:{color:'#f1f5f9'}}}}});
+new Chart(document.getElementById('c2'),{type:'doughnut',data:{labels:['Middle East','Asia','North America','Europe'],datasets:[{data:[748,491,193,122],backgroundColor:['rgba(239,68,68,0.7)','rgba(245,158,11,0.7)','rgba(59,130,246,0.7)','rgba(34,197,94,0.7)']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:10}}}}});
+</script>
+</body>
+</html>
