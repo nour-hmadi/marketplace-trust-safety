@@ -18,14 +18,34 @@ df = df.withColumn(
     (when(col("total_orders") > 100, -10).otherwise(0))
 )
 
-# Risk label based on score
+# Normalized risk index (0-100)
 df = df.withColumn(
-    "risk_label",
-    when(col("risk_score") >= 60, "HIGH")
-    .when(col("risk_score") >= 30, "MEDIUM")
-    .otherwise("LOW")
+    "return_score",
+    (col("return_rate") * 100)
+)
+df = df.withColumn(
+    "complaint_score",
+    when(col("high_severity_complaints") / 10 * 100 > 100, 100.0)
+    .otherwise(col("high_severity_complaints") / 10 * 100)
+)
+df = df.withColumn(
+    "trust_score",
+    when(col("verification_status") == "unverified", 100.0).otherwise(0.0)
+)
+df = df.withColumn(
+    "risk_index",
+    (col("return_score") * 0.4) +
+    (col("complaint_score") * 0.4) +
+    (col("trust_score") * 0.2)
 )
 
+# Risk label based on normalized index
+df = df.withColumn(
+    "risk_label",
+    when(col("risk_index") >= 70, "HIGH")
+    .when(col("risk_index") >= 40, "MEDIUM")
+    .otherwise("LOW")
+)
 # Fraud patterns: flag specific suspicious combinations
 fraud_df = df.filter(
     (col("return_rate") > 0.5) |
@@ -45,14 +65,20 @@ fraud_df = df.filter(
 )
 
 # Write seller risk to curated layer
+#df.select(
+#    "seller_id", "seller_name", "region", "verification_status",
+ #   "total_orders", "total_returns", "return_rate",
+  #  "total_complaints", "high_severity_complaints",
+   # "avg_order_amount", "risk_score", "risk_label"
+#).write.mode("overwrite") \
+# .parquet("hdfs://namenode:9000/data/curated/seller_risk/")
 df.select(
     "seller_id", "seller_name", "region", "verification_status",
     "total_orders", "total_returns", "return_rate",
     "total_complaints", "high_severity_complaints",
-    "avg_order_amount", "risk_score", "risk_label"
+    "avg_order_amount", "risk_score", "risk_index", "risk_label"
 ).write.mode("overwrite") \
  .parquet("hdfs://namenode:9000/data/curated/seller_risk/")
-
 # Write fraud patterns to curated layer
 fraud_df.write.mode("overwrite") \
     .parquet("hdfs://namenode:9000/data/curated/fraud_patterns/")
