@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trust & Safety — Login</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080f1a; --surface: #0d1b2e; --border: #1e3a5f;
+  --teal: #00d4aa; --blue: #4fc3f7; --red: #ff6b6b;
+  --white: #e2f0fb; --muted: #5a7a9a;
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:var(--bg); color:var(--white);
+  font-family:var(--font-mono); min-height:100vh;
+  display:flex; align-items:center; justify-content:center;
+}
+body::before {
+  content:''; position:fixed; inset:0;
+  background-image:
+    linear-gradient(rgba(0,212,170,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,212,170,0.03) 1px,transparent 1px);
+  background-size:40px 40px; pointer-events:none;
+}
+.login-box {
+  position:relative; z-index:1;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:20px; padding:40px; width:420px;
+}
+.logo {
+  display:flex; align-items:center; gap:12px; margin-bottom:32px;
+}
+.logo-icon {
+  width:44px; height:44px;
+  background:linear-gradient(135deg,var(--teal),var(--blue));
+  border-radius:12px; display:flex; align-items:center;
+  justify-content:center; font-size:22px;
+}
+.logo-text { font-family:var(--font-display); font-size:16px; font-weight:700; }
+.logo-sub { font-size:10px; color:var(--muted); margin-top:2px; }
+h2 {
+  font-family:var(--font-display); font-size:22px;
+  font-weight:800; margin-bottom:6px;
+}
+.subtitle { font-size:12px; color:var(--muted); margin-bottom:28px; }
+.field { margin-bottom:16px; }
+label { display:block; font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+input, select {
+  width:100%; background:var(--bg); border:1px solid var(--border);
+  color:var(--white); font-family:var(--font-mono); font-size:13px;
+  padding:12px 14px; border-radius:10px; outline:none;
+  transition:border-color 0.2s; appearance:none;
+}
+input:focus, select:focus { border-color:var(--teal); }
+select option { background:#0d1b2e; }
+.btn-login {
+  width:100%; padding:14px; border:none; border-radius:10px;
+  background:linear-gradient(135deg,var(--teal),var(--blue));
+  color:#080f1a; font-family:var(--font-display); font-size:14px;
+  font-weight:800; cursor:pointer; margin-top:8px;
+  transition:opacity 0.2s; letter-spacing:0.5px;
+}
+.btn-login:hover { opacity:0.9; }
+.btn-login:active { transform:scale(0.98); }
+.error {
+  background:rgba(255,107,107,0.1); border:1px solid var(--red);
+  color:var(--red); padding:10px 14px; border-radius:8px;
+  font-size:12px; margin-top:12px; display:none;
+}
+.roles-info {
+  margin-top:24px; border-top:1px solid var(--border); padding-top:20px;
+}
+.role-card {
+  background:var(--bg); border:1px solid var(--border);
+  border-radius:10px; padding:12px 14px; margin-bottom:10px;
+}
+.role-title { font-size:12px; font-weight:600; margin-bottom:4px; }
+.role-access { font-size:10px; color:var(--muted); line-height:1.6; }
+.role-card.ts { border-left:3px solid var(--teal); }
+.role-card.biz { border-left:3px solid var(--blue); }
+</style>
+</head>
+<body>
+<div class="login-box">
+  <div class="logo">
+    <div class="logo-icon">🛡️</div>
+    <div>
+      <div class="logo-text">Trust & Safety Platform</div>
+      <div class="logo-sub">Secure Access Portal</div>
+    </div>
+  </div>
+
+  <h2>Sign In</h2>
+  <p class="subtitle">Your role determines what data you can access</p>
+
+  <div class="field">
+    <label>Role</label>
+    <select id="role">
+      <option value="trust_safety">👮 Trust & Safety Analyst</option>
+      <option value="business">📊 Business Analyst</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label>Password</label>
+    <input type="password" id="password" placeholder="Enter your password">
+  </div>
+
+  <button class="btn-login" onclick="login()">Access Platform →</button>
+  <div class="error" id="error">❌ Invalid password. Please try again.</div>
+
+  <div class="roles-info">
+    <div class="role-card ts">
+      <div class="role-title" style="color:#00d4aa">👮 Trust & Safety Analyst</div>
+      <div class="role-access">
+        Password: <strong style="color:#e2f0fb">ts_admin</strong><br>
+        ✅ Full dashboard access<br>
+        ✅ Risk scores + fraud patterns<br>
+        ✅ Complaint details + severity<br>
+        ✅ Raw data investigation tools
+      </div>
+    </div>
+    <div class="role-card biz">
+      <div class="role-title" style="color:#4fc3f7">📊 Business Analyst</div>
+      <div class="role-access">
+        Password: <strong style="color:#e2f0fb">biz_user</strong><br>
+        ✅ Seller names + regions<br>
+        ✅ Risk labels only (HIGH/MEDIUM/LOW)<br>
+        ❌ No risk scores or complaint details<br>
+        ❌ No fraud patterns or raw data
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+async function login() {
+  const role = document.getElementById('role').value;
+  const password = document.getElementById('password').value;
+  const error = document.getElementById('error');
+
+const credentials = {
+    trust_safety: '660a821bf16baed1e1231b7a4c87ed28b9bbffe00814890d7716bf9d40a3b3a7',
+    business: '8e092573de6132d196649bf1c347bab309c29fe4b25c73dc61accee5ee877b37'
+};
+
+const encoder = new TextEncoder();
+const data = encoder.encode(password);
+const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+const hashArray = Array.from(new Uint8Array(hashBuffer));
+const hashedPassword = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+if (hashedPassword === credentials[role]) {
+    localStorage.setItem('ts_role', role);
+    localStorage.setItem('ts_logged_in', 'true');
+    window.location.href = 'dashboard.html';
+  } else {
+    error.style.display = 'block';
+    setTimeout(() => error.style.display = 'none', 3000);
+  }
+}
+
+document.getElementById('password').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') login();
+});
+</script>
+</body>
+</html>

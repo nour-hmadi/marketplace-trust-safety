@@ -47,7 +47,7 @@ echo ""
 echo ">>> STEP 5: Generating updated dashboard..."
 docker exec spark-master /spark/bin/spark-submit --master spark://spark-master:7077 /opt/spark_jobs/generate_dashboard.py 2>/dev/null
 docker cp spark-master:/tmp/dashboard.html docs/geo_risk_dashboard.html
-xdg-open docs/geo_risk_dashboard.html
+#xdg-open docs/geo_risk_dashboard.html
 
 echo ""
 echo "================================================"
@@ -59,5 +59,11 @@ echo ">>> STEP 6: Regenerating dashboard with new data..."
 docker cp spark_jobs/generate_dashboard.py spark-master:/opt/spark_jobs/
 docker exec spark-master /spark/bin/spark-submit --master spark://spark-master:7077 /opt/spark_jobs/generate_dashboard.py 2>/dev/null
 docker cp spark-master:/tmp/dashboard.html docs/geo_risk_dashboard.html
-xdg-open docs/geo_risk_dashboard.html
+
+# Refresh Flask cache
+curl -s -X POST http://localhost:5000/api/refresh > /dev/null
+echo "Dashboard refreshed!"
+
+# Open unified frontend
+xdg-open frontend/index.html
 echo "Dashboard updated!"

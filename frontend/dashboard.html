@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trust & Safety — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080f1a;--surface:#0d1b2e;--surface2:#112240;--border:#1e3a5f;--teal:#00d4aa;--blue:#4fc3f7;--red:#ff6b6b;--amber:#ffd166;--green:#06d6a0;--white:#e2f0fb;--muted:#5a7a9a;--font-display:'Syne',sans-serif;--font-mono:'JetBrains Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--white);font-family:var(--font-mono);min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,170,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,170,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+.container{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 24px}
+header{border-bottom:1px solid var(--border);padding:16px 0;margin-bottom:28px}
+.header-inner{display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--teal),var(--blue));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.logo-text{font-family:var(--font-display);font-size:16px;font-weight:700}
+.role-badge{padding:6px 14px;border-radius:20px;font-size:11px;font-weight:600}
+.role-ts{background:rgba(0,212,170,0.15);border:1px solid rgba(0,212,170,0.3);color:var(--teal)}
+.role-biz{background:rgba(79,195,247,0.15);border:1px solid rgba(79,195,247,0.3);color:var(--blue)}
+.btn-logout{background:transparent;border:1px solid var(--border);color:var(--muted);padding:6px 14px;border-radius:20px;font-family:var(--font-mono);font-size:11px;cursor:pointer;margin-left:10px;transition:all 0.2s}
+.btn-logout:hover{border-color:var(--red);color:var(--red)}
+.access-banner{padding:12px 16px;border-radius:10px;margin-bottom:24px;font-size:12px}
+.banner-ts{background:rgba(0,212,170,0.08);border:1px solid rgba(0,212,170,0.2);color:var(--teal)}
+.banner-biz{background:rgba(79,195,247,0.08);border:1px solid rgba(79,195,247,0.2);color:var(--blue)}
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.s-total::before{background:var(--teal)}.s-high::before{background:var(--red)}.s-medium::before{background:var(--amber)}.s-low::before{background:var(--green)}
+.stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px}
+.stat-value{font-family:var(--font-display);font-size:28px;font-weight:800}
+.s-total .stat-value{color:var(--teal)}.s-high .stat-value{color:var(--red)}.s-medium .stat-value{color:var(--amber)}.s-low .stat-value{color:var(--green)}
+.section-title{font-family:var(--font-display);font-size:15px;font-weight:700;margin-bottom:16px}
+.restricted-msg{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--red);border-radius:10px;padding:16px 20px;margin-bottom:24px;font-size:12px;color:var(--muted);line-height:1.8}
+table{width:100%;border-collapse:collapse;background:var(--surface);border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:24px}
+th{text-align:left;padding:12px 16px;font-size:10px;color:var(--muted);font-weight:500;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:1px;background:var(--surface2)}
+td{padding:14px 16px;font-size:13px;border-bottom:1px solid rgba(30,58,95,0.5)}
+tr:last-child td{border-bottom:none}
+tr.clickable:hover td{background:rgba(0,212,170,0.03);cursor:pointer}
+.badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-HIGH{background:rgba(255,107,107,0.15);color:var(--red)}
+.badge-MEDIUM{background:rgba(255,209,102,0.15);color:var(--amber)}
+.badge-LOW{background:rgba(6,214,160,0.15);color:var(--green)}
+.fraud-card{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--red);border-radius:12px;padding:16px 20px;margin-bottom:10px}
+.fraud-seller{font-size:13px;font-weight:600;color:var(--red);margin-bottom:4px}
+.fraud-pattern{font-size:11px;color:var(--amber);margin-bottom:4px}
+.fraud-explanation{font-size:11px;color:var(--muted)}
+.modal-overlay{position:fixed;inset:0;background:rgba(8,15,26,0.95);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.active{display:flex}
+.modal-box{background:#0d1b2e;border:1px solid #1e3a5f;border-radius:20px;padding:32px;max-width:720px;width:100%;max-height:80vh;overflow-y:auto}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+.modal-title{font-family:var(--font-display);font-size:20px;font-weight:800}
+.modal-sub{font-size:12px;color:var(--muted);margin-top:4px}
+.btn-close{background:transparent;border:1px solid var(--border);color:var(--muted);padding:6px 14px;border-radius:20px;cursor:pointer;font-family:var(--font-mono);font-size:11px}
+.privacy-note{background:rgba(0,212,170,0.05);border:1px solid rgba(0,212,170,0.2);border-radius:10px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:var(--teal)}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon">🛡</div>
+        <div><div class="logo-text">Trust and Safety Platform</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="role-badge" id="role-badge"></div>
+        <button class="btn-logout" onclick="logout()">Sign Out</button>
+      </div>
+    </div>
+  </header>
+  <div class="access-banner" id="access-banner"></div>
+  <div class="stats-bar" id="stats-bar"></div>
+  <div class="section-title">Seller Overview</div>
+  <table><thead id="thead"></thead><tbody id="tbody"></tbody></table>
+  <div id="fraud-section"></div>
+  <div id="restricted-section"></div>
+</div>
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modal-title"></div>
+        <div class="modal-sub">Customer Investigation View - Masked IDs SHA-256</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span id="modal-badge"></span>
+        <button class="btn-close" onclick="document.getElementById('modal').classList.remove('active')">Close</button>
+      </div>
+    </div>
+    <div class="privacy-note">Customer IDs are masked with SHA-256 hashing. Real identities are never exposed to analysts.</div>
+    <div style="font-family:var(--font-display);font-size:13px;font-weight:700;margin-bottom:14px" id="modal-count"></div>
+    <table>
+      <thead><tr><th>Customer ID masked</th><th>Orders</th><th>Returns</th><th>Complaints</th><th>Total</th><th>Flag</th></tr></thead>
+      <tbody id="modal-body"></tbody>
+    </table>
+  </div>
+</div>
+<script>
+var sellers=[
+  {id:'S58',name:'BudgetFinds',region:'Middle East',status:'unverified',orders:101,returns:46,rr:0.455,complaints:60,high:47,score:748.2,index:61.8,label:'HIGH'},
+  {id:'S61',name:'CheapGoods',region:'Asia',status:'unverified',orders:66,returns:29,rr:0.439,complaints:36,high:26,score:442.6,index:58.1,label:'HIGH'},
+  {id:'S56',name:'QuickDeals',region:'Europe',status:'unverified',orders:71,returns:20,rr:0.282,complaints:24,high:4,score:106.3,index:33.0,label:'MEDIUM'},
+  {id:'S62',name:'PremiumHub',region:'Europe',status:'verified',orders:106,returns:28,rr:0.264,complaints:24,high:22,score:345.6,index:37.4,label:'MEDIUM'},
+  {id:'S55',name:'TechZone Store',region:'North America',status:'verified',orders:54,returns:12,rr:0.222,complaints:10,high:6,score:113.9,index:27.0,label:'LOW'},
+  {id:'S60',name:'FastShip Co',region:'North America',status:'verified',orders:82,returns:9,rr:0.110,complaints:8,high:4,score:79.4,index:18.7,label:'LOW'},
+  {id:'S57',name:'MegaSupplies',region:'Asia',status:'verified',orders:97,returns:9,rr:0.093,complaints:4,high:2,score:48.7,index:16.3,label:'LOW'},
+  {id:'S59',name:'LuxuryGoods',region:'Europe',status:'verified',orders:93,returns:2,rr:0.022,complaints:2,high:1,score:15.9,index:13.8,label:'LOW'}
+];
+var frauds=[
+  {id:'S58',name:'BudgetFinds',pattern:'REPEATED_HIGH_COMPLAINTS',note:'Multiple high severity complaints detected',score:748.2},
+  {id:'S61',name:'CheapGoods',pattern:'REPEATED_HIGH_COMPLAINTS',note:'Multiple high severity complaints detected',score:442.6},
+  {id:'S62',name:'PremiumHub',pattern:'REPEATED_HIGH_COMPLAINTS',note:'Multiple high severity complaints detected',score:345.6},
+  {id:'S56',name:'QuickDeals',pattern:'REPEATED_HIGH_COMPLAINTS',note:'Multiple high severity complaints detected',score:106.3},
+  {id:'S55',name:'TechZone Store',pattern:'REPEATED_HIGH_COMPLAINTS',note:'Multiple high severity complaints detected',score:113.9}
+];
+var custOrders={
+  'S58':[{cid:'4fe727cf...',o:5,r:4,c:3,amt:1647.5,flag:'High return rate'},{cid:'b6748eaf...',o:3,r:3,c:2,amt:988.5,flag:'All orders returned'},{cid:'e7549d2e...',o:8,r:4,c:1,amt:2634.8,flag:'Suspicious pattern'},{cid:'f3c891de...',o:6,r:5,c:3,amt:1974.6,flag:'Counterfeit claims'}],
+  'S61':[{cid:'9d3f2e1a...',o:4,r:3,c:2,amt:1614.6,flag:'High return rate'},{cid:'c4b7a932...',o:6,r:4,c:3,amt:2420.8,flag:'Counterfeit claims'},{cid:'71e4d8f2...',o:3,r:2,c:1,amt:1210.9,flag:'Suspicious pattern'}],
+  'S56':[{cid:'2a9f4c81...',o:5,r:2,c:1,amt:1526.1,flag:''},{cid:'8f1c6e34...',o:4,r:2,c:2,amt:1220.9,flag:'Multiple complaints'}],
+  'S62':[{cid:'d4e8f123...',o:8,r:3,c:4,amt:4939.4,flag:'High complaint rate'},{cid:'a7b2c891...',o:6,r:2,c:3,amt:3703.9,flag:'Multiple complaints'}],
+  'S55':[{cid:'1a2b3c4d...',o:4,r:1,c:1,amt:1309.9,flag:''},{cid:'5e6f7a8b...',o:3,r:1,c:0,amt:982.5,flag:''}],
+  'S60':[{cid:'9c8d7e6f...',o:5,r:1,c:1,amt:1698.2,flag:''},{cid:'4b3a2c1d...',o:3,r:0,c:0,amt:1018.9,flag:''}],
+  'S57':[{cid:'f1e2d3c4...',o:6,r:1,c:0,amt:1946.7,flag:''},{cid:'b5a6c7d8...',o:4,r:0,c:1,amt:1297.8,flag:''}],
+  'S59':[{cid:'2e3f4a5b...',o:7,r:0,c:0,amt:2301.5,flag:'Excellent'},{cid:'6c7d8e9f...',o:5,r:0,c:0,amt:1644.0,flag:'Excellent'}]
+};
+var role=localStorage.getItem('ts_role');
+var loggedIn=localStorage.getItem('ts_logged_in');
+if(!loggedIn||!role){window.location.href='login.html';}
+var isTS=role==='trust_safety';
+document.getElementById('role-badge').textContent=isTS?'Trust and Safety Analyst':'Business Analyst';
+document.getElementById('role-badge').className='role-badge '+(isTS?'role-ts':'role-biz');
+var banner=document.getElementById('access-banner');
+banner.className='access-banner '+(isTS?'banner-ts':'banner-biz');
+banner.innerHTML=isTS?'Full Access: You have access to all seller data, risk scores, complaint details, and fraud patterns.':'Restricted Access: You can view seller names, regions, and risk labels only.';
+var high=sellers.filter(function(s){return s.label==='HIGH'}).length;
+var medium=sellers.filter(function(s){return s.label==='MEDIUM'}).length;
+var low=sellers.filter(function(s){return s.label==='LOW'}).length;
+var sb=document.getElementById('stats-bar');
+if(isTS){
+  sb.innerHTML='<div class="stat-card s-total"><div class="stat-label">Total Sellers</div><div class="stat-value">'+sellers.length+'</div></div><div class="stat-card s-high"><div class="stat-label">High Risk</div><div class="stat-value">'+high+'</div></div><div class="stat-card s-medium"><div class="stat-label">Medium Risk</div><div class="stat-value">'+medium+'</div></div><div class="stat-card s-low"><div class="stat-label">Low Risk</div><div class="stat-value">'+low+'</div></div>';
+}else{
+  sb.style.gridTemplateColumns='repeat(3,1fr)';
+  sb.innerHTML='<div class="stat-card s-total"><div class="stat-label">Total Sellers</div><div class="stat-value">'+sellers.length+'</div></div><div class="stat-card s-high"><div class="stat-label">High Risk</div><div class="stat-value">'+high+'</div></div><div class="stat-card s-low"><div class="stat-label">Low Risk</div><div class="stat-value">'+low+'</div></div>';
+}
+function lc(l){return l==='HIGH'?'var(--red)':l==='MEDIUM'?'var(--amber)':'var(--green)'}
+function rc(r){return r>0.4?'var(--red)':r>0.2?'var(--amber)':'var(--green)'}
+var thead=document.getElementById('thead');
+var tbody=document.getElementById('tbody');
+if(isTS){
+  thead.innerHTML='<tr><th>#</th><th>Seller</th><th>Region</th><th>Status</th><th>Orders</th><th>Return Rate</th><th>High Complaints</th><th>Risk Score</th><th>Risk Index</th><th>Label</th></tr>';
+  tbody.innerHTML=sellers.map(function(s,i){return '<tr class="clickable" onclick="openModal(\''+s.id+'\',\''+s.name+'\',\''+s.label+'\')"><td style="color:var(--muted)">'+(i+1)+'</td><td><strong>'+s.name+'</strong><br><span style="font-size:10px;color:var(--muted)">'+s.id+'</span></td><td style="color:var(--muted)">'+s.region+'</td><td style="color:'+(s.status==='verified'?'var(--green)':'var(--red)')+';font-size:12px">'+(s.status==='verified'?'Verified':'Unverified')+'</td><td>'+s.orders+'</td><td style="color:'+rc(s.rr)+'">'+(s.rr*100).toFixed(1)+'%</td><td style="color:'+(s.high>=10?'var(--red)':'var(--muted)')+'">'+s.high+'</td><td style="color:var(--muted);font-size:12px">'+s.score.toFixed(1)+'</td><td style="font-weight:600;color:'+lc(s.label)+'">'+s.index.toFixed(1)+'</td><td><span class="badge badge-'+s.label+'">'+s.label+'</span></td></tr>';}).join('');
+  document.getElementById('fraud-section').innerHTML='<div class="section-title">Fraud Patterns Detected</div>'+frauds.map(function(f){return '<div class="fraud-card"><div class="fraud-seller">'+f.name+' ('+f.id+')</div><div class="fraud-pattern">Pattern: '+f.pattern+'</div><div class="fraud-explanation">'+f.note+' - Raw Score: '+f.score+'</div></div>';}).join('');
+}else{
+  thead.innerHTML='<tr><th>#</th><th>Seller Name</th><th>Region</th><th>Risk Label</th></tr>';
+  tbody.innerHTML=sellers.map(function(s,i){return '<tr class="clickable" onclick="openModal(\''+s.id+'\',\''+s.name+'\',\''+s.label+'\')"><td style="color:var(--muted)">'+(i+1)+'</td><td><strong>'+s.name+'</strong></td><td style="color:var(--muted)">'+s.region+'</td><td><span class="badge badge-'+s.label+'">'+s.label+'</span></td></tr>';}).join('');
+  document.getElementById('restricted-section').innerHTML='<div class="restricted-msg"><strong style="color:var(--white)">Access Restricted</strong><br><br>The following is only available to Trust and Safety Analysts:<br>- Risk scores and risk index<br>- Return rates and complaint counts<br>- Fraud pattern detection results<br>- Seller verification status<br><br>Contact your Trust and Safety team for investigation requests.</div>';
+}
+function openModal(id,name,label){
+  document.getElementById('modal-title').textContent=name;
+  document.getElementById('modal-badge').innerHTML='<span class="badge badge-'+label+'">'+label+'</span>';
+  if(!isTS){
+    document.getElementById('modal-count').textContent='Access Restricted';
+    document.getElementById('modal-body').innerHTML='<tr><td colspan="6" style="padding:24px;color:var(--muted);text-align:center">Customer order details are only available to Trust and Safety Analysts.</td></tr>';
+  }else{
+    var orders=custOrders[id]||[];
+    document.getElementById('modal-count').textContent='Customer Activity ('+orders.length+' customers)';
+    document.getElementById('modal-body').innerHTML=orders.map(function(o){return '<tr><td style="color:var(--teal);font-size:11px">'+o.cid+'</td><td style="text-align:center">'+o.o+'</td><td style="text-align:center;color:'+(o.r/o.o>0.5?'var(--red)':'var(--white)')+'">'+o.r+'</td><td style="text-align:center;color:'+(o.c>1?'var(--amber)':'var(--white)')+'">'+o.c+'</td><td style="text-align:right">$'+o.amt.toFixed(2)+'</td><td style="font-size:11px">'+o.flag+'</td></tr>';}).join('');
+  }
+  document.getElementById('modal').classList.add('active');
+}
+function closeModal(e){if(e.target===document.getElementById('modal')){document.getElementById('modal').classList.remove('active');}}
+function logout(){localStorage.removeItem('ts_role');localStorage.removeItem('ts_logged_in');window.location.href='login.html';}
+</script>
+</body>
+</html>
