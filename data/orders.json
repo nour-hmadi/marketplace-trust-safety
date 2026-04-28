@@ -731,3 +731,6 @@
 {"order_id": "O_DUP_TEST", "seller_id": "S58", "customer_id": "C150", "amount": 450.0, "timestamp": "2026-04-28T10:00:00", "status": "completed", "category": "electronics"}
 {"order_id": "O_DUP_TEST", "seller_id": "S58", "customer_id": "C150", "amount": 450.0, "timestamp": "2026-04-28T10:00:00", "status": "completed", "category": "electronics"}
 {"order_id": "O_DUP_TEST", "seller_id": "S58", "customer_id": "C150", "amount": 450.0, "timestamp": "2026-04-28T10:00:00", "status": "completed", "category": "electronics"}
+{"order_id": "O_DUP_TEST2", "seller_id": "S58", "customer_id": "C150", "amount": 500.0, "timestamp": "2026-04-28T10:00:00", "status": "completed", "category": "electronics"}
+{"order_id": "O_DUP_TEST2", "seller_id": "S58", "customer_id": "C150", "amount": 500.0, "timestamp": "2026-04-28T10:00:00", "status": "completed", "category": "electronics"}
+{"order_id": "O_DUP_TEST2", "seller_id": "S58", "customer_id": "C150", "amount": 500.0, "timestamp": "2026-04-28T10:00:00", "status": "completed", "category": "electronics"}
