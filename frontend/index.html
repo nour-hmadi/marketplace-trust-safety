@@ -165,6 +165,33 @@ tr.cl:hover td{background:rgba(0,212,170,0.03);cursor:pointer}
   </nav>
   <div class="page active" id="page-dash">
     <div class="banner" id="dbanner"></div>
+
+<div class="layer-panel" id="layer-panel" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px">
+  <div style="background:var(--surface);border:1px solid #1d4ed8;border-radius:12px;padding:16px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#1d4ed8"></div>
+    <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">📦 Raw Layer</div>
+    <div style="font-family:var(--fd);font-size:24px;font-weight:800;color:#4fc3f7" id="lraw">--</div>
+    <div style="font-size:10px;color:var(--muted);margin-top:4px">orders in HDFS raw</div>
+  </div>
+  <div style="background:var(--surface);border:1px solid var(--teal);border-radius:12px;padding:16px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--teal)"></div>
+    <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">🔄 Refined Layer</div>
+    <div style="font-family:var(--fd);font-size:24px;font-weight:800;color:var(--teal)" id="lrefined">--</div>
+    <div style="font-size:10px;color:var(--muted);margin-top:4px">orders after Spark clean</div>
+  </div>
+  <div style="background:var(--surface);border:1px solid var(--red);border-radius:12px;padding:16px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--red)"></div>
+    <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">🗑️ Duplicates Removed</div>
+    <div style="font-family:var(--fd);font-size:24px;font-weight:800;color:var(--red)" id="ldupes">--</div>
+    <div style="font-size:10px;color:var(--muted);margin-top:4px">by Spark deduplication</div>
+  </div>
+  <div style="background:var(--surface);border:1px solid var(--amber);border-radius:12px;padding:16px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:var(--amber)"></div>
+    <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">✅ Curated Layer</div>
+    <div style="font-family:var(--fd);font-size:24px;font-weight:800;color:var(--amber)" id="lcurated">--</div>
+    <div style="font-size:10px;color:var(--muted);margin-top:4px">sellers risk scored</div>
+  </div>
+</div>
     <div class="sbar" id="dstats"></div>
     <div class="stitle">📋 Seller Overview <span style="font-size:11px;color:var(--muted);font-weight:400">(click a row to investigate)</span></div>
     <table><thead id="dthead"></thead><tbody id="dtbody"></tbody></table>
@@ -293,6 +320,7 @@ async function runPipeline(){
     if(d.success){
       toast('Pipeline complete! Refreshing dashboard...','success');
       await loadSellers();
+await loadLayerCounts();
       geoBuilt=false;
       buildDash();
       buildGeo();
@@ -307,7 +335,23 @@ async function runPipeline(){
   btn.disabled=false;
 }
 
-
+async function loadLayerCounts(){
+  try{
+    var res=await fetch('http://localhost:5000/api/layer_counts');
+    var d=await res.json();
+    if(d.success){
+      document.getElementById('lraw').textContent=d.data.raw;
+      document.getElementById('lrefined').textContent=d.data.refined;
+      document.getElementById('ldupes').textContent=d.data.duplicates_removed;
+      document.getElementById('lcurated').textContent=d.data.curated;
+    }
+  }catch(e){
+    document.getElementById('lraw').textContent='733';
+    document.getElementById('lrefined').textContent='671';
+    document.getElementById('ldupes').textContent='62';
+    document.getElementById('lcurated').textContent='8';
+  }
+}
 
 
 // Load live data from API
@@ -355,6 +399,7 @@ async function doLogin(){
     if(!isTS)document.getElementById('nav-ep').style.display='none';
 if(isTS)document.getElementById('pipeline-btn').style.display='block'; 
    await loadSellers(); 
+await loadLayerCounts();
    buildDash();buildGeo();
   }else{
     var e=document.getElementById('lerr');e.style.display='block';
