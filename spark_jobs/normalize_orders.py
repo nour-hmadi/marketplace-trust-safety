@@ -18,6 +18,8 @@ df_clean = df \
     .dropDuplicates(["order_id"]) \
     .filter(col("order_id").isNotNull()) \
     .filter(col("seller_id").isNotNull()) \
+.filter(col("amount") > 0) \
+.filter(col("amount") < 10000) \
     .filter(col("amount") > 0)
 
 print("Writing refined orders...")
