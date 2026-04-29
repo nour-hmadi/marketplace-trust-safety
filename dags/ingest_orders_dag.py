@@ -15,14 +15,14 @@ def ingest_orders_from_kafka():
     from datetime import datetime
     from kafka import KafkaConsumer
 
-    group_id = f'airflow-orders-{datetime.now().strftime("%Y%m%d%H%M%S")}'
+    group_id = 'airflow-orders-consumer-v1'
     print(f"Using group_id: {group_id}")
 
     consumer = KafkaConsumer(
         'orders',
         bootstrap_servers='kafka:29092',
         auto_offset_reset='earliest',
-        enable_auto_commit=False,
+        enable_auto_commit=True,
         group_id=group_id,
         consumer_timeout_ms=15000,
         value_deserializer=lambda x: json.loads(x.decode('utf-8')) if x else None
@@ -71,7 +71,7 @@ def ingest_returns_from_kafka():
     from datetime import datetime
     from kafka import KafkaConsumer
 
-    group_id = f'airflow-returns-{datetime.now().strftime("%Y%m%d%H%M%S")}'
+    group_id = 'airflow-returns-consumer-v1'
     print(f"Using group_id: {group_id}")
 
     consumer = KafkaConsumer(
