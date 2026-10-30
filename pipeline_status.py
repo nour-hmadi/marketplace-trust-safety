@@ -113,3 +113,56 @@ def spark_status():
                          "started": local_time(a.get("starttime")),
                          "duration_s": round(a.get("duration", 0) / 1000)} for a in apps[:8]],
     }
+
+
+# ---------- PROCESSING PIPELINE (Airflow DAG seller_risk_pipeline) ----------
+from urllib.parse import quote
+
+PROCESSING_DAG = "seller_risk_pipeline"
+PROCESSING_JOBS = ["normalize_orders", "normalize_returns", "normalize_complaints",
+                   "normalize_sellers", "seller_aggregates", "risk_scoring"]
+
+
+def trigger_dag(dag_id):
+    """Start a DAG now and return its run id."""
+    response = requests.post(f"{AIRFLOW}/dags/{dag_id}/dagRuns", auth=AIRFLOW_AUTH, json={}, timeout=10)
+    response.raise_for_status()
+    return response.json()["dag_run_id"]
+
+
+def latest_run_id(dag_id):
+    response = requests.get(f"{AIRFLOW}/dags/{dag_id}/dagRuns", auth=AIRFLOW_AUTH,
+                            params={"order_by": "-execution_date", "limit": 1}, timeout=10)
+    response.raise_for_status()
+    runs = response.json()["dag_runs"]
+    return runs[0]["dag_run_id"] if runs else None
+
+
+def dag_run(dag_id, run_id):
+    response = requests.get(f"{AIRFLOW}/dags/{dag_id}/dagRuns/{quote(run_id, safe='')}",
+                            auth=AIRFLOW_AUTH, timeout=10)
+    response.raise_for_status()
+    run = response.json()
+    return {"state": run["state"], "started": local_time(run["start_date"]),
+            "ended": local_time(run["end_date"])}
+
+
+def task_instances(dag_id, run_id):
+    """State of every task in one run, keyed by task id."""
+    response = requests.get(f"{AIRFLOW}/dags/{dag_id}/dagRuns/{quote(run_id, safe='')}/taskInstances",
+                            auth=AIRFLOW_AUTH, timeout=10)
+    response.raise_for_status()
+    return {t["task_id"]: t for t in response.json()["task_instances"]}
+
+
+def task_log(dag_id, run_id, task_id, try_number):
+    """Airflow log text of one task attempt."""
+    base = f"{AIRFLOW}/dags/{dag_id}/dagRuns/{quote(run_id, safe='')}/taskInstances/{task_id}/logs"
+    for attempt in (try_number, try_number - 1):
+        if attempt < 1:
+            continue
+        response = requests.get(f"{base}/{attempt}", auth=AIRFLOW_AUTH,
+                                headers={"Accept": "text/plain"}, timeout=10)
+        if response.ok:
+            return response.text
+    raise RuntimeError("log not available yet")

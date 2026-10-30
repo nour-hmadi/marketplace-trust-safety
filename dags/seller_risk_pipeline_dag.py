@@ -1,70 +1,61 @@
-from airflow import DAG
-from airflow.operators.bash import BashOperator
-from airflow.sensors.external_task import ExternalTaskSensor
+"""Processing pipeline: HDFS raw -> refined -> curated, orchestrated by Airflow.
+
+Spark is not installed in the Airflow container, so each task asks the Flask Spark gateway
+to run one job on the Spark cluster (the role Apache Livy plays in production).
+"""
+import os
 from datetime import datetime, timedelta
+
+from airflow import DAG
+from airflow.operators.python import PythonOperator
+
+GATEWAY = os.environ.get("SPARK_GATEWAY", "http://172.18.0.1:5000/api/spark/run")
+
+# Run order. In production the four normalize jobs would run in parallel;
+# here they run one after another to protect the laptop's memory.
+JOBS = [
+    "normalize_orders",
+    "normalize_returns",
+    "normalize_complaints",
+    "normalize_sellers",
+    "seller_aggregates",
+    "risk_scoring",
+]
 
 default_args = {
     'owner': 'trust-safety-team',
     'retries': 1,
-    'retry_delay': timedelta(minutes=5),
-    'email_on_failure': False
+    'retry_delay': timedelta(minutes=2),
+    'execution_timeout': timedelta(minutes=15),
+    'email_on_failure': False,
 }
 
-SPARK_SUBMIT = """
-    spark-submit \
-    --master spark://spark-master:7077 \
-    --deploy-mode client \
-    {}
-"""
+
+def run_spark_job(job):
+    import requests
+
+    response = requests.post(f"{GATEWAY}/{job}", timeout=900)
+    body = response.json()
+    for line in body.get("log_tail", []):
+        print(line)
+    print(f"{job}: success={body.get('success')} in {body.get('seconds')} s")
+    if not body.get("success"):
+        raise RuntimeError(f"Spark job {job} failed: {body.get('error') or body.get('exit_code')}")
+
 
 with DAG(
     dag_id='seller_risk_pipeline',
     default_args=default_args,
-    description='Transform, score, and publish seller risk datasets',
-    schedule_interval='0 7 * * *',
+    description='Spark processing: raw -> refined (clean, deduplicate) -> curated (seller risk scores)',
+    schedule='0 7 * * *',
     start_date=datetime(2026, 1, 1),
     catchup=False,
-    tags=['pipeline', 'risk', 'spark']
+    max_active_runs=1,
+    tags=['processing', 'spark'],
 ) as dag:
-
-    normalize_orders = BashOperator(
-        task_id='normalize_orders',
-        bash_command=SPARK_SUBMIT.format(
-            '/opt/airflow/spark_jobs/normalize_orders.py'
-        )
-    )
-
-    normalize_returns = BashOperator(
-        task_id='normalize_returns',
-        bash_command=SPARK_SUBMIT.format(
-            '/opt/airflow/spark_jobs/normalize_returns.py'
-        )
-    )
-
-    seller_aggregates = BashOperator(
-        task_id='seller_aggregates',
-        bash_command=SPARK_SUBMIT.format(
-            '/opt/airflow/spark_jobs/seller_aggregates.py'
-        )
-    )
-
-    risk_scoring = BashOperator(
-        task_id='risk_scoring',
-        bash_command=SPARK_SUBMIT.format(
-            '/opt/airflow/spark_jobs/risk_scoring.py'
-        )
-    )
-
-    validate_output = BashOperator(
-        task_id='validate_curated_output',
-        bash_command="""
-            hdfs dfs -test -e /data/curated/seller_risk/ && \
-            echo "Curated seller risk table exists. Validation passed." || \
-            echo "WARNING: Curated table missing!"
-        """
-    )
-
-    normalize_orders >> seller_aggregates
-    normalize_returns >> seller_aggregates
-    seller_aggregates >> risk_scoring
-    risk_scoring >> validate_output
+    previous = None
+    for job in JOBS:
+        task = PythonOperator(task_id=job, python_callable=run_spark_job, op_kwargs={'job': job})
+        if previous:
+            previous >> task
+        previous = task
