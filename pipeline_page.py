@@ -15,6 +15,7 @@ JOB_INFO = {
     "seller_aggregates": "Join orders, returns, complaints and sellers → metrics per seller",
     "risk_scoring": "Risk index 0–100, HIGH/MEDIUM/LOW label and fraud patterns → curated",
     "customer_activity": "Customers per seller with salted SHA-256 masked IDs → curated (investigations)",
+    "governance": "Data-quality funnel, integrity and privacy checks → curated/data_quality",
 }
 
 

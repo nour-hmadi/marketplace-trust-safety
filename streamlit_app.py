@@ -7,6 +7,7 @@ import streamlit as st
 from monitor_page import pipeline_monitor_page
 from pipeline_page import run_pipeline_page
 from dashboard_page import dashboard_page
+from governance_page import governance_page
 
 st.set_page_config(page_title="Trust & Safety Platform", page_icon="🛡️", layout="wide")
 
@@ -136,7 +137,7 @@ def main_page():
 
     if is_ts:
         st.success("Full access: risk scores, fraud patterns, customer investigation, event producer.")
-        page = st.sidebar.radio("Navigate", ["📡 Event Producer", "🔄 Pipeline Monitor", "⚡ Run Pipeline", "📊 Risk Dashboard"])
+        page = st.sidebar.radio("Navigate", ["📡 Event Producer", "🔄 Pipeline Monitor", "⚡ Run Pipeline", "📊 Risk Dashboard", "🛡️ Governance"])
         if page == "📡 Event Producer":
             event_producer_page()
         elif page == "🔄 Pipeline Monitor":
@@ -145,6 +146,8 @@ def main_page():
             run_pipeline_page()
         elif page == "📊 Risk Dashboard":
             dashboard_page(is_ts=True)
+        elif page == "🛡️ Governance":
+            governance_page()
     else:
         st.info("Restricted access: seller names, regions and risk labels only.")
         dashboard_page(is_ts=False)

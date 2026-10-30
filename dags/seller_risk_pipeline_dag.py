@@ -21,6 +21,7 @@ JOBS = [
     "seller_aggregates",
     "risk_scoring",
     "customer_activity",
+    "governance",
 ]
 
 default_args = {
