@@ -119,7 +119,48 @@ _Coming soon._
 
 ## How to run
 
-_Coming soon: a reproducible Docker Compose setup with a one-command bootstrap._
+**Requirements:** Docker with Compose v2, Python 3.10+, about 8 GB of RAM.
+
+1. **Clone and install the Python libraries**
+   ```bash
+   git clone https://github.com/nour-hmadi/marketplace-trust-safety.git
+   cd marketplace-trust-safety
+   pip install -r requirements.txt
+   ```
+2. **Create your secrets** (`.env` is never committed)
+   ```bash
+   python - << 'EOF' > .env
+   import base64, os, secrets
+   print("MASKING_SALT=" + secrets.token_hex(16))
+   print("AIRFLOW_FERNET_KEY=" + base64.urlsafe_b64encode(os.urandom(32)).decode())
+   print("AIRFLOW_SECRET_KEY=" + secrets.token_hex(16))
+   EOF
+   ```
+3. **Start the stack** (the first run builds the Airflow image)
+   ```bash
+   ./start_platform.sh
+   ```
+4. **First run only:** create the Kafka topics and load the seed data into HDFS
+   ```bash
+   python bootstrap.py
+   ```
+5. **Start the backend and the app**, each in its own terminal
+   ```bash
+   python3 app.py
+   streamlit run streamlit_app.py
+   ```
+6. Open http://localhost:8501, log in as **Trust & Safety Analyst** (password `ts_admin`) or
+   **Business Analyst** (`biz_user`), and click **⚡ Run Pipeline**.
+
+To stop everything safely: `./stop_platform.sh`
+
+| Service | URL | Login |
+|---|---|---|
+| Streamlit app | http://localhost:8501 | see step 6 |
+| Airflow | http://localhost:8081 | admin / admin123 |
+| Kafka UI | http://localhost:8080 | – |
+| Spark master | http://localhost:8082 | – |
+| HDFS namenode | http://localhost:9870 | – |
 
 ## Design decisions and limitations
 
@@ -127,7 +168,8 @@ _Coming soon: a reproducible Docker Compose setup with a one-command bootstrap._
   gateway to run each job. In production, Livy or a Spark-enabled Airflow image would play this role.
 - **Sequential Spark jobs**: the jobs run one at a time to fit an 8 GB laptop. In production, the four
   normalize jobs would run in parallel.
-- **Single datanode**: HDFS is configured for replication factor 3, but one datanode can only hold one copy.
+- **Single datanode**: replication factor 1, one copy of each block. A production cluster runs several
+  datanodes with replication factor 3.
 - **Small files**: ingestion writes one small file per topic per run. A compaction DAG is planned.
 - **Pending returns**: a return still waiting in Kafka is not yet known to HDFS, so its order can still be
   offered as returnable until the next pipeline run.
@@ -148,7 +190,11 @@ _Coming soon: a reproducible Docker Compose setup with a one-command bootstrap._
 ├── dags/                  # Airflow DAGs
 ├── spark_jobs/            # PySpark jobs
 ├── data/                  # seed data
+├── docker-compose.yml     # the whole stack: Kafka, HDFS, Spark, Airflow
+├── docker/airflow/        # Airflow image (adds the Kafka client from a local wheel)
+├── bootstrap.py           # first run: Kafka topics + seed data into HDFS
 ├── start_platform.sh      # starts the containers in the right order
+├── stop_platform.sh       # stops them safely
 ├── requirements.txt
 └── .env.example           # secrets template (copy to .env)
 ```

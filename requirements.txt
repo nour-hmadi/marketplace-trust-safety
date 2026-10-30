@@ -5,3 +5,4 @@ requests
 flask
 flask-cors
 kafka-python
+pyarrow
