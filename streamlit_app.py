@@ -4,6 +4,8 @@ from datetime import datetime
 import requests
 import streamlit as st
 
+from monitor_page import pipeline_monitor_page
+
 st.set_page_config(page_title="Trust & Safety Platform", page_icon="🛡️", layout="wide")
 
 API = "http://localhost:5000/api"
@@ -132,8 +134,10 @@ def main_page():
 
     if is_ts:
         st.success("Full access: risk scores, fraud patterns, customer investigation, event producer.")
-        page = st.sidebar.radio("Navigate", ["📡 Event Producer"])
-        if page == "📡 Event Producer":
+        page = st.sidebar.radio("Navigate", ["🔄 Pipeline Monitor", "📡 Event Producer"])
+        if page == "🔄 Pipeline Monitor":
+            pipeline_monitor_page()
+        elif page == "📡 Event Producer":
             event_producer_page()
     else:
         st.info("Restricted access: seller names, regions and risk labels only. Your dashboard arrives in Phase 6.")
