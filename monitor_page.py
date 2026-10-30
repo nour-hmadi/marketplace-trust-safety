@@ -95,7 +95,7 @@ def pipeline_monitor_page():
     show_table(kafka, kafka_error)
 
     st.subheader("2 · Airflow ingestion runs")
-    st.caption("DAG ingest_orders runs every 10 minutes: Kafka → HDFS raw (orders, returns, complaints).")
+    st.caption("DAG ingest_kafka_to_hdfs runs every 10 minutes: Kafka → HDFS raw (orders, returns, complaints).")
     show_table(runs, runs_error)
 
     st.subheader("3 · HDFS raw layer")

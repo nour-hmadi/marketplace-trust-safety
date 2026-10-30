@@ -68,7 +68,7 @@ def ingest_topic_to_hdfs(topic):
 
 
 with DAG(
-    dag_id='ingest_orders',
+    dag_id='ingest_kafka_to_hdfs',
     default_args=default_args,
     description='Stream ingestion: Kafka topics (orders, returns, complaints) -> HDFS raw layer',
     schedule='*/10 * * * *',

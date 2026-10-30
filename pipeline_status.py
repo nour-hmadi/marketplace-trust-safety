@@ -10,7 +10,7 @@ AIRFLOW_AUTH = ("admin", "admin123")
 WEBHDFS = "http://localhost:9870/webhdfs/v1"
 SPARK_MASTER = "http://localhost:8082/json/"
 TOPICS = ["orders", "returns", "complaints"]
-INGEST_DAG = "ingest_orders"
+INGEST_DAG = "ingest_kafka_to_hdfs"
 
 
 def local_time(value):
