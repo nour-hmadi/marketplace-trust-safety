@@ -70,6 +70,27 @@ def log_event(event_type, result):
     })
 
 
+@st.cache_data(ttl=60, show_spinner=False)
+def refined_orders_and_returns():
+    from data_access import read_parquet_folder
+    orders = read_parquet_folder("/data/refined/orders")[["order_id", "seller_id", "event_ts"]]
+    returned = set(read_parquet_folder("/data/refined/returns")["order_id"])
+    return orders, returned
+
+
+def returnable_orders(sid):
+    """Real orders of this seller not returned yet: orders sent in this session first, then HDFS refined."""
+    try:
+        orders, returned = refined_orders_and_returns()
+        from_hdfs = orders[orders["seller_id"] == sid].sort_values("event_ts", ascending=False)["order_id"].tolist()
+    except Exception:
+        from_hdfs, returned = [], set()
+    from_session = [e["event_id"] for e in st.session_state.get("events", [])
+                    if e["type"] == "ORDER" and e["seller"] == sid]
+    already = returned | st.session_state.get("returned_orders", set())
+    return [o for o in from_session + from_hdfs if o not in already]
+
+
 def event_producer_page():
     st.header("📡 Event Producer")
     st.caption("Streamlit → Flask API → Kafka topic. Airflow moves new messages to HDFS raw every 10 minutes.")
@@ -92,14 +113,18 @@ def event_producer_page():
 
     with col2:
         st.subheader("↩️ Return")
+        seller = st.selectbox("Seller", SELLER_OPTIONS, key="return_seller")
+        orders = returnable_orders(seller_id(seller))
         with st.form("return_form"):
-            seller = st.selectbox("Seller", SELLER_OPTIONS, key="return_seller")
+            order = st.selectbox("Order to return", orders, key="return_order",
+                                 help="Only real orders of this seller that haven't been returned yet")
             reason = st.selectbox("Reason", ["counterfeit", "damaged_item", "wrong_item",
                                              "not_as_described", "changed_mind"], key="return_reason")
-            if st.form_submit_button("Send to topic: returns"):
-                result = send_event("return", {"seller_id": seller_id(seller), "reason": reason})
+            if st.form_submit_button("Send to topic: returns", disabled=not orders):
+                result = send_event("return", {"seller_id": seller_id(seller), "order_id": order, "reason": reason})
                 if result:
                     log_event("RETURN", result)
+                    st.session_state.setdefault("returned_orders", set()).add(order)
 
     with col3:
         st.subheader("⚠️ Complaint")

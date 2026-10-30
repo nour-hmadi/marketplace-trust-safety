@@ -143,9 +143,11 @@ def send_order():
 @app.route('/api/return', methods=['POST'])
 def send_return():
     data = request.json
+    if not data.get('order_id'):
+        return jsonify({"success": False, "error": "order_id is required: a return must belong to a real order"}), 400
     ret = {
         "return_id": f"R_LIVE_{random.randint(10000,99999)}",
-        "order_id": f"O_{random.randint(1000,9999)}",
+        "order_id": data.get('order_id'),
         "seller_id": data.get('seller_id'),
         "timestamp": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
         "reason": data.get('reason', 'damaged_item'),
