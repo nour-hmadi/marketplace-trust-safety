@@ -84,39 +84,52 @@ df = df.withColumn("risk_label",
 )
 
 # ── FRAUD PATTERNS ───────────────────────────────────────────
-fraud_df = df.filter(
-    (col("return_rate") > 0.3) |
-    (col("high_severity_complaints") >= 2) |
-    ((col("verification_status") == "unverified") &
-     (col("total_complaints") > 2))
-).select(
-    col("seller_id"),
-    when(col("return_rate") > 0.5, "HIGH_RETURN_RATE")
-    .when(col("high_severity_complaints") >= 2,
-          "REPEATED_HIGH_COMPLAINTS")
-    .otherwise("UNVERIFIED_WITH_COMPLAINTS").alias("pattern_type"),
-    col("risk_score").alias("indicator_value"),
-    lit(30.0).alias("threshold"),
-    current_timestamp().alias("flagged_at"),
-    when(col("return_rate") > 0.5,
-         "Return rate exceeds 50% threshold")
-    .when(col("high_severity_complaints") >= 2,
-          "Multiple high severity complaints detected")
-    .otherwise("Unverified seller with multiple complaints")
-    .alias("explanation")
+# One row per (seller, pattern). indicator_value = the metric that triggered the rule,
+# threshold = that rule's limit. Rates per order keep the rules fair for small and big sellers.
+from datetime import datetime
+
+scored_at = datetime.now().replace(microsecond=0)   # one timestamp for the whole run
+
+df = df.withColumn("high_severity_per_order",
+    when(col("total_orders") > 0, col("high_severity_complaints") / col("total_orders")).otherwise(0.0)
 )
 
+
+def pattern(condition, name, indicator, threshold, explanation):
+    return df.filter(condition).select(
+        col("seller_id"),
+        lit(name).alias("pattern_type"),
+        col(indicator).cast("double").alias("indicator_value"),
+        lit(float(threshold)).alias("threshold"),
+        lit(scored_at).alias("flagged_at"),
+        lit(explanation).alias("explanation"),
+    )
+
+
+fraud_df = pattern(col("return_rate") > 0.30, "HIGH_RETURN_RATE", "return_rate", 0.30,
+                   "More than 30% of orders are returned") \
+    .unionByName(pattern(col("high_severity_per_order") > 0.10, "FREQUENT_HIGH_SEVERITY_COMPLAINTS",
+                         "high_severity_per_order", 0.10,
+                         "More than 1 in 10 orders leads to a high-severity complaint")) \
+    .unionByName(pattern((col("verification_status") == "unverified") & (col("complaint_rate") > 0.10),
+                         "UNVERIFIED_WITH_COMPLAINTS", "complaint_rate", 0.10,
+                         "Unverified seller, and more than 1 in 10 orders gets a complaint"))
+
 # ── WRITE CURATED LAYER ──────────────────────────────────────
-df.select(
+seller_risk = df.select(
     "seller_id", "seller_name", "region", "verification_status",
     "total_orders", "total_returns", "return_rate",
     "total_complaints", "high_severity_complaints",
     "avg_order_amount", "risk_score", "risk_index", "risk_label"
-).write.mode("overwrite") \
- .parquet("hdfs://namenode:9000/data/curated/seller_risk/")
+).withColumn("scored_at", lit(scored_at))
 
-fraud_df.write.mode("overwrite") \
-    .parquet("hdfs://namenode:9000/data/curated/fraud_patterns/")
+seller_risk.write.mode("overwrite").parquet("hdfs://namenode:9000/data/curated/seller_risk/")
+fraud_df.write.mode("overwrite").parquet("hdfs://namenode:9000/data/curated/fraud_patterns/")
 
-print("Done: risk_scoring")
+# ── RISK HISTORY (append-only): one row per seller per run, for trend charts ──
+seller_risk.select("scored_at", "seller_id", "seller_name", "risk_index", "risk_label",
+                   "total_orders", "return_rate") \
+    .write.mode("append").parquet("hdfs://namenode:9000/data/curated/risk_history/")
+
+print(f"Done: risk_scoring ({fraud_df.count()} fraud patterns flagged)")
 spark.stop()
