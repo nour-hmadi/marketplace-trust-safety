@@ -20,6 +20,7 @@ JOBS = [
     "normalize_sellers",
     "seller_aggregates",
     "risk_scoring",
+    "customer_activity",
 ]
 
 default_args = {

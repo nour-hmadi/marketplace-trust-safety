@@ -122,5 +122,42 @@ def dashboard_page(is_ts):
 
     if is_ts:
         analyst_view(risk)
+        investigation_view(risk)
     else:
         business_view(risk)
+
+
+def investigation_view(risk):
+    st.subheader("🔍 Seller investigation")
+    st.caption("Customers of one seller, from /data/curated/customer_activity. Customer IDs are masked in Spark "
+               "with a salted SHA-256 hash, so the real IDs never reach this screen.")
+    names = risk.set_index("seller_id")["seller_name"]
+    seller = st.selectbox("Seller", risk["seller_id"].tolist(),          # riskiest seller first
+                          format_func=lambda sid: f"{sid} · {names[sid]}")
+    activity = load("/data/curated/customer_activity")
+    customers = activity[activity["seller_id"] == seller] if not activity.empty else activity
+    if customers.empty:
+        st.info("No customer activity for this seller yet. Run the pipeline first.")
+        return
+    customers = customers.sort_values(["counterfeit_returns", "returns"], ascending=False)
+    suspicious = customers[(customers["return_rate"] >= 0.5) | (customers["counterfeit_returns"] > 0)]
+
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Customers", len(customers))
+    c2.metric("Orders", int(customers["orders"].sum()))
+    c3.metric("Counterfeit returns", int(customers["counterfeit_returns"].sum()))
+    c4.metric("Suspicious customers", len(suspicious))
+
+    def flag(row):
+        if row.counterfeit_returns > 0:
+            return "🚨 counterfeit returns"
+        return "⚠️ returns half of orders" if row.return_rate >= 0.5 else ""
+
+    shown = customers.assign(customer=customers["customer_masked"].str[:12] + "…",
+                             flag=customers.apply(flag, axis=1))
+    st.dataframe(shown[["customer", "orders", "total_spent", "returns", "counterfeit_returns", "return_rate", "flag"]],
+                 hide_index=True,
+                 column_config={"total_spent": st.column_config.NumberColumn("total spent", format="dollar"),
+                                "return_rate": st.column_config.NumberColumn("return rate", format="percent")})
+    st.caption("Only returns linked to an order of this seller appear here. Unlinked (orphan) returns are a "
+               "data-quality issue, reported on the Governance page.")

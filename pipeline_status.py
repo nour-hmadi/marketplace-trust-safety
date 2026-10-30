@@ -120,7 +120,7 @@ from urllib.parse import quote
 
 PROCESSING_DAG = "seller_risk_pipeline"
 PROCESSING_JOBS = ["normalize_orders", "normalize_returns", "normalize_complaints",
-                   "normalize_sellers", "seller_aggregates", "risk_scoring"]
+                   "normalize_sellers", "seller_aggregates", "risk_scoring", "customer_activity"]
 
 
 def trigger_dag(dag_id):

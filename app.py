@@ -272,7 +272,7 @@ import threading
 import time
 
 SPARK_JOBS = ["normalize_orders", "normalize_returns", "normalize_complaints", "normalize_sellers",
-              "seller_aggregates", "risk_scoring", "governance", "register_hive_tables"]
+              "seller_aggregates", "risk_scoring", "governance", "register_hive_tables", "customer_activity"]
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 SPARK_LOCK = threading.Lock()   # one Spark job at a time, to protect the laptop's RAM
 

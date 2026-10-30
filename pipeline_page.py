@@ -14,6 +14,7 @@ JOB_INFO = {
     "normalize_sellers": "Seller master data → refined",
     "seller_aggregates": "Join orders, returns, complaints and sellers → metrics per seller",
     "risk_scoring": "Risk index 0–100, HIGH/MEDIUM/LOW label and fraud patterns → curated",
+    "customer_activity": "Customers per seller with salted SHA-256 masked IDs → curated (investigations)",
 }
 
 
