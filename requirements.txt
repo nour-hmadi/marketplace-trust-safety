@@ -1,0 +1,7 @@
+streamlit
+plotly
+pandas
+requests
+flask
+flask-cors
+kafka-python
