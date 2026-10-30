@@ -1,195 +1,152 @@
-version: "3.8"
+# Marketplace Trust & Safety Analytics Platform: the full stack.
+# Start it with ./start_platform.sh (services in the right order). Secrets come from .env.
+name: trust-safety
 
 x-airflow-common: &airflow-common
-  build:
-    context: ./docker/airflow
-  environment:
+  build: ./docker/airflow
+  image: trust-safety-airflow:2.8.1
+  environment: &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
-    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
-    AIRFLOW__CORE__FERNET_KEY: ""
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow123@airflow-db/airflow
     AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "false"
+    AIRFLOW__CORE__FERNET_KEY: ${AIRFLOW_FERNET_KEY}
+    AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW_SECRET_KEY}   # shared, so the webserver can read task logs
+    AIRFLOW__API__AUTH_BACKENDS: airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session
+    AIRFLOW__SCHEDULER__DAG_DIR_LIST_INTERVAL: "60"          # notice new or deleted DAG files within a minute
+    SPARK_GATEWAY: http://host.docker.internal:5000/api/spark/run
+  extra_hosts:
+    - "host.docker.internal:host-gateway"   # lets Airflow reach the Flask gateway on the laptop
   volumes:
     - ./dags:/opt/airflow/dags
-    - ./spark_jobs:/opt/airflow/spark_jobs
-    - ./data:/opt/airflow/data
     - airflow_logs:/opt/airflow/logs
-  depends_on:
-    - postgres
-  networks:
-    - marketplace_net
 
 services:
-
-  # ZOOKEEPER
+  # ---------- streaming ----------
   zookeeper:
-    image: confluentinc/cp-zookeeper:7.5.0
+    image: confluentinc/cp-zookeeper:7.4.0
     container_name: zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
-    networks:
-      - marketplace_net
+      ZOOKEEPER_TICK_TIME: 2000
+    volumes:
+      - zookeeper_data:/var/lib/zookeeper/data
+      - zookeeper_log:/var/lib/zookeeper/log
+    ports: ["2181:2181"]
 
-  # KAFKA
   kafka:
-    image: confluentinc/cp-kafka:7.5.0
+    image: confluentinc/cp-kafka:7.4.0
     container_name: kafka
-    depends_on:
-      - zookeeper
-    ports:
-      - "9092:9092"
+    depends_on: [zookeeper]
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092   # 29092 inside Docker, 9092 for the laptop
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-    networks:
-      - marketplace_net
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+    ports: ["9092:9092"]
 
-  # HDFS NAMENODE
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    depends_on: [kafka]
+    environment:
+      KAFKA_CLUSTERS_0_NAME: trust_safety_cluster
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+    ports: ["8080:8080"]
+
+  # ---------- storage ----------
   namenode:
     image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
     container_name: namenode
-    ports:
-      - "9870:9870"
     environment:
-      CLUSTER_NAME: marketplace-cluster
-    env_file:
-      - ./docker/hadoop.env
+      CLUSTER_NAME: trust_safety_cluster
+    env_file: ./docker/hadoop.env
     volumes:
-      - hdfs_namenode:/hadoop/dfs/name
-    networks:
-      - marketplace_net
+      - hadoop_namenode:/hadoop/dfs/name
+    ports: ["9870:9870", "9000:9000"]
 
-  # HDFS DATANODE
   datanode:
     image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
     container_name: datanode
-    depends_on:
-      - namenode
+    depends_on: [namenode]
     environment:
       SERVICE_PRECONDITION: "namenode:9870"
-    env_file:
-      - ./docker/hadoop.env
+    env_file: ./docker/hadoop.env
     volumes:
-      - hdfs_datanode:/hadoop/dfs/data
-    networks:
-      - marketplace_net
+      - hadoop_datanode:/hadoop/dfs/data
+    ports: ["9864:9864"]
 
-  # HIVE METASTORE DATABASE
-  hive-metastore-db:
-    image: postgres:14
-    container_name: hive-metastore-db
-    environment:
-      POSTGRES_DB: metastore
-      POSTGRES_USER: hive
-      POSTGRES_PASSWORD: hive
-    volumes:
-      - hive_metastore_db:/var/lib/postgresql/data
-    networks:
-      - marketplace_net
-
-  # HIVE METASTORE
-  hive-metastore:
-    image: bde2020/hive:2.3.2-postgresql-metastore
-    container_name: hive-metastore
-    depends_on:
-      - hive-metastore-db
-      - namenode
-    environment:
-      SERVICE_PRECONDITION: "namenode:9870 hive-metastore-db:5432"
-    env_file:
-      - ./docker/hadoop.env
-    command: /opt/hive/bin/hive --service metastore
-    networks:
-      - marketplace_net
-
-  # HIVE SERVER
-  hiveserver:
-    image: bde2020/hive:2.3.2-postgresql-metastore
-    container_name: hiveserver
-    depends_on:
-      - hive-metastore
-    ports:
-      - "10000:10000"
-      - "10002:10002"
-    environment:
-      SERVICE_PRECONDITION: "hive-metastore:9083"
-    env_file:
-      - ./docker/hadoop.env
-    networks:
-      - marketplace_net
-
-  # SPARK MASTER
+  # ---------- processing ----------
   spark-master:
     image: bde2020/spark-master:3.3.0-hadoop3.3
     container_name: spark-master
-    ports:
-      - "8080:8080"
-      - "7077:7077"
+    ports: ["8082:8080", "7077:7077"]
     volumes:
-      - ./spark_jobs:/opt/spark_jobs
-      - ./data:/opt/data
-    networks:
-      - marketplace_net
+      - ./spark_jobs:/opt/spark_jobs:ro   # the Spark jobs come straight from the repo
 
-  # SPARK WORKER
   spark-worker:
     image: bde2020/spark-worker:3.3.0-hadoop3.3
     container_name: spark-worker
-    depends_on:
-      - spark-master
+    depends_on: [spark-master]
     environment:
       SPARK_MASTER: spark://spark-master:7077
-    networks:
-      - marketplace_net
 
-  # AIRFLOW DATABASE
-  postgres:
-    image: postgres:14
-    container_name: airflow-postgres
+  # ---------- orchestration ----------
+  airflow-db:
+    image: postgres:13
+    container_name: airflow-db
     environment:
       POSTGRES_USER: airflow
-      POSTGRES_PASSWORD: airflow
+      POSTGRES_PASSWORD: airflow123
       POSTGRES_DB: airflow
     volumes:
-      - airflow_postgres:/var/lib/postgresql/data
-    networks:
-      - marketplace_net
+      - airflow_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 5s
+      retries: 10
 
-  # AIRFLOW WEBSERVER
+  airflow-init:   # one-time setup: creates Airflow's tables and the admin user, then exits
+    <<: *airflow-common
+    container_name: airflow-init
+    command: version
+    environment:
+      <<: *airflow-common-env
+      _AIRFLOW_DB_MIGRATE: "true"
+      _AIRFLOW_WWW_USER_CREATE: "true"
+      _AIRFLOW_WWW_USER_USERNAME: admin
+      _AIRFLOW_WWW_USER_PASSWORD: admin123
+    depends_on:
+      airflow-db:
+        condition: service_healthy
+
   airflow-webserver:
     <<: *airflow-common
     container_name: airflow-webserver
-    ports:
-      - "8081:8080"
     command: webserver
+    ports: ["8081:8080"]
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
 
-  # AIRFLOW SCHEDULER
   airflow-scheduler:
     <<: *airflow-common
     container_name: airflow-scheduler
     command: scheduler
-
-  # JUPYTER
-  jupyter:
-    image: jupyter/pyspark-notebook:latest
-    container_name: jupyter
-    ports:
-      - "8888:8888"
-    volumes:
-      - ./notebooks:/home/jovyan/work
-      - ./data:/home/jovyan/data
-    networks:
-      - marketplace_net
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
 
 volumes:
-  hdfs_namenode:
-  hdfs_datanode:
-  hive_metastore_db:
-  airflow_postgres:
+  zookeeper_data:
+  zookeeper_log:
+  kafka_data:
+  hadoop_namenode:
+  hadoop_datanode:
+  airflow_db:
   airflow_logs:
-
-networks:
-  marketplace_net:
-    driver: bridge

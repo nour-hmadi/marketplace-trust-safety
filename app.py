@@ -107,9 +107,7 @@ def run_spark_job(job):
         return jsonify({"success": False, "error": f"unknown job: {job}"}), 404
     with SPARK_LOCK:
         started = time.time()
-        # deploy the repo version first: the repo is the source of truth
-        subprocess.run(["docker", "cp", os.path.join(PROJECT_DIR, "spark_jobs", f"{job}.py"),
-                        f"spark-master:/opt/spark_jobs/{job}.py"], check=True)
+        # the jobs are mounted from ./spark_jobs (docker-compose.yml): the repo is the source of truth
         result = subprocess.run(["docker", "exec", *secret_env(), "spark-master", "/spark/bin/spark-submit",
                                  "--master", "spark://spark-master:7077", f"/opt/spark_jobs/{job}.py"],
                                 capture_output=True, text=True, timeout=900)

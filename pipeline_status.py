@@ -87,6 +87,8 @@ def hdfs_files(path):
 def hdfs_layer(layer):
     """One row per dataset folder in /data/<layer>: files, total size, last write."""
     response = requests.get(f"{WEBHDFS}/data/{layer}", params={"op": "LISTSTATUS"}, timeout=10)
+    if response.status_code == 404:   # fresh install: the layer doesn't exist until the pipeline writes it
+        return []
     response.raise_for_status()
     folders = sorted(f["pathSuffix"] for f in response.json()["FileStatuses"]["FileStatus"]
                      if f["type"] == "DIRECTORY")
