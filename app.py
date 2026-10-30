@@ -277,6 +277,22 @@ SPARK_JOBS = ["normalize_orders", "normalize_returns", "normalize_complaints", "
               "seller_aggregates", "risk_scoring", "governance", "register_hive_tables", "customer_activity"]
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 SPARK_LOCK = threading.Lock()   # one Spark job at a time, to protect the laptop's RAM
+SECRETS = ("MASKING_SALT",)   # passed to Spark jobs as environment variables, never stored in Git
+
+
+def load_env_file(path=os.path.join(PROJECT_DIR, ".env")):
+    """Read KEY=value lines from the local .env file (ignored by Git)."""
+    if os.path.exists(path):
+        for line in open(path):
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                key, value = line.split("=", 1)
+                os.environ.setdefault(key.strip(), value.strip())
+
+
+def secret_env():
+    load_env_file()
+    return [flag for name in SECRETS if os.environ.get(name) for flag in ("-e", f"{name}={os.environ[name]}")]
 
 
 @app.route('/api/spark/run/<job>', methods=['POST'])
@@ -288,7 +304,7 @@ def run_spark_job(job):
         # deploy the repo version first: the repo is the source of truth
         subprocess.run(['docker', 'cp', os.path.join(PROJECT_DIR, 'spark_jobs', f'{job}.py'),
                         f'spark-master:/opt/spark_jobs/{job}.py'], check=True)
-        result = subprocess.run(['docker', 'exec', 'spark-master', '/spark/bin/spark-submit',
+        result = subprocess.run(['docker', 'exec', *secret_env(), 'spark-master', '/spark/bin/spark-submit',
                                  '--master', 'spark://spark-master:7077', f'/opt/spark_jobs/{job}.py'],
                                 capture_output=True, text=True, timeout=900)
     lines = (result.stdout + result.stderr).splitlines()

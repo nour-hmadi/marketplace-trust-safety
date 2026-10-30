@@ -10,7 +10,11 @@ from pyspark.sql.functions import (coalesce, col, concat, count, lit, max as spa
 spark = SparkSession.builder.appName("CustomerActivity").getOrCreate()
 spark.sparkContext.setLogLevel("ERROR")
 
-SALT = "trust-safety-2026"   # TODO Phase 8: read from a secret, not from the code
+import os
+
+SALT = os.environ.get("MASKING_SALT")   # secret, passed in by the Flask gateway from the local .env file
+if not SALT:
+    raise RuntimeError("MASKING_SALT is not set: refusing to mask customer IDs with a public salt")
 
 orders = spark.read.parquet("hdfs://namenode:9000/data/refined/orders/")
 returns = spark.read.parquet("hdfs://namenode:9000/data/refined/returns/")
