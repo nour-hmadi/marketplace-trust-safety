@@ -4,5 +4,5 @@ pandas
 requests
 flask
 flask-cors
-kafka-python
+kafka-python==2.3.1
 pyarrow

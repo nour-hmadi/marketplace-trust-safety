@@ -168,6 +168,7 @@ def main_page():
 
     st.sidebar.title("🛡️ Platform")
     st.sidebar.write(f"Logged in as: **{role}**")
+    st.sidebar.caption("🕒 Times are shown in Beirut time. Airflow run IDs use UTC.")
     if st.sidebar.button("Sign out"):
         st.session_state.clear()
         st.rerun()
