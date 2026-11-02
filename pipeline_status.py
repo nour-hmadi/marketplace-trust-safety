@@ -168,3 +168,12 @@ def task_log(dag_id, run_id, task_id, try_number):
         if response.ok:
             return response.text
     raise RuntimeError("log not available yet")
+
+
+def active_run(dag_id):
+    """Id of a queued or running run of this DAG, or None. Used to block duplicate triggers."""
+    response = requests.get(f"{AIRFLOW}/dags/{dag_id}/dagRuns", auth=AIRFLOW_AUTH,
+                            params={"state": ["queued", "running"], "limit": 1}, timeout=10)
+    response.raise_for_status()
+    runs = response.json()["dag_runs"]
+    return runs[0]["dag_run_id"] if runs else None

@@ -79,7 +79,14 @@ def run_pipeline_page():
     except Exception:
         st.markdown("**Curated risk scores last written:** HDFS unreachable")
 
-    if st.button("⚡ Run the full pipeline now", type="primary"):
+    try:
+        busy = ps.active_run(ps.PROCESSING_DAG)
+    except Exception:
+        busy = None
+    if busy:
+        st.session_state["pipeline_run"] = busy
+        st.info("A pipeline run is already in progress. Follow it below, then refresh the page to run it again.")
+    if st.button("⚡ Run the full pipeline now", type="primary", disabled=bool(busy)):
         try:
             st.session_state["pipeline_run"] = ps.trigger_dag(ps.PROCESSING_DAG)
         except Exception as error:
