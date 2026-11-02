@@ -105,7 +105,10 @@ def returnable_orders(sid):
 def event_producer_page():
     st.header("📡 Event Producer")
     st.caption("Streamlit → Flask API → Kafka topic. Airflow moves new messages to HDFS raw every 10 minutes.")
-    st.link_button("Open Kafka UI", "http://localhost:8080")
+    if st.context.headers.get("Host", "").startswith(("localhost", "127.0.0.1")):
+        st.link_button("Open Kafka UI", "http://localhost:8080")
+    else:
+        st.caption("Kafka UI runs privately on the server (port 8080) and is not exposed to the internet.")
 
     col1, col2, col3 = st.columns(3)
 
