@@ -4,6 +4,8 @@ from datetime import datetime
 import requests
 import streamlit as st
 
+from about_page import about_section
+
 from monitor_page import pipeline_monitor_page
 from pipeline_page import run_pipeline_page
 from dashboard_page import dashboard_page
@@ -35,7 +37,16 @@ def seller_id(option):
 
 # ---------- LOGIN ----------
 def login_page():
-    st.title("🛡️ Trust & Safety Platform")
+    st.title("🛡️ Trust & Safety Analytics Platform")
+    about, sign_in = st.columns([3, 2], gap="large")
+    with about:
+        about_section()
+    with sign_in:
+        st.subheader("🔐 Sign in")
+        login_form()
+
+
+def login_form():
     st.caption("Secure access portal. Your role decides what data you can see.")
     role = st.selectbox("Role", list(HASHES.keys()))
     password = st.text_input("Password", type="password")
