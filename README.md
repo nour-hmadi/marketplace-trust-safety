@@ -1,5 +1,8 @@
 # Marketplace Trust & Safety Analytics Platform
 
+**Live demo:** https://nour-trust-safety.duckdns.org  
+Sign in as *Trust & Safety Analyst* with the password `ts_admin`.
+
 End-to-end big data pipeline that detects risky marketplace sellers. Orders, returns and complaints stream
 through **Kafka**, **Airflow** orchestrates ingestion and **Spark** processing on **HDFS**, and a role-based
 **Streamlit** app shows every pipeline stage live, the resulting risk scores, and the data-governance checks.
@@ -115,7 +118,15 @@ Example, seller S58: 10.4 (returns) + 13.5 (complaints) + 21.4 (severity) + 10 (
 
 ## Screenshots
 
-_Coming soon._
+| **Landing page** | **Pipeline Monitor** |
+|---|---|
+| ![Landing page](docs/screenshots/landing.png) | ![Pipeline Monitor](docs/screenshots/monitor.png) |
+| **Run Pipeline** | **Risk Dashboard** |
+| ![Run Pipeline](docs/screenshots/pipeline.png) | ![Risk Dashboard](docs/screenshots/dashboard.png) |
+| **Fraud patterns** | **Data-quality checks** |
+| ![Fraud patterns](docs/screenshots/fraud-patterns.png) | ![Data-quality checks](docs/screenshots/quality-checks.png) |
+| **Privacy and role-based access** | |
+| ![Privacy and role-based access](docs/screenshots/access.png) | |
 
 ## How to run
 
@@ -129,7 +140,7 @@ _Coming soon._
    ```
 2. **Create your secrets** (`.env` is never committed)
    ```bash
-   python - << 'EOF' > .env
+   python3 - << 'EOF' > .env
    import base64, os, secrets
    print("MASKING_SALT=" + secrets.token_hex(16))
    print("AIRFLOW_FERNET_KEY=" + base64.urlsafe_b64encode(os.urandom(32)).decode())
@@ -161,6 +172,17 @@ To stop everything safely: `./stop_platform.sh`
 | Kafka UI | http://localhost:8080 | – |
 | Spark master | http://localhost:8082 | – |
 | HDFS namenode | http://localhost:9870 | – |
+
+## Deployment
+
+The live demo runs the full stack on a single AWS EC2 instance (`m7i-flex.large`: 2 vCPU, 8 GB RAM, Ubuntu 24.04, Stockholm region).
+
+- **Docker Compose** runs the 11 services. `restart: unless-stopped` brings them back after a reboot.
+- **systemd** runs the Flask API and the Streamlit app, and restarts them if they stop.
+- **Caddy** sits in front of Streamlit as a reverse proxy and gets the HTTPS certificate from Let's Encrypt automatically. The domain is a free DuckDNS name pointing at an Elastic IP.
+- **Only HTTP and HTTPS are public.** Kafka, HDFS, Spark and Airflow stay private on the server, and SSH is limited to one network with key-only login.
+- **Secrets** (masking salt, Airflow keys) live in a `.env` file on the server, never in Git.
+- **Pinned versions** in `requirements.txt` make a fresh install match production.
 
 ## Design decisions and limitations
 
