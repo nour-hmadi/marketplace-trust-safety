@@ -203,6 +203,7 @@ The live demo runs the full stack on a single AWS EC2 instance (`m7i-flex.large`
 ```
 ├── app.py                 # Flask: event producer API + Spark job gateway
 ├── streamlit_app.py       # Streamlit entry point: login, roles, navigation
+├── about_page.py          # public landing page shown before sign-in
 ├── monitor_page.py        # live status of every pipeline stage
 ├── pipeline_page.py       # trigger the processing DAG and watch its jobs
 ├── dashboard_page.py      # risk dashboard and seller investigation
@@ -217,7 +218,8 @@ The live demo runs the full stack on a single AWS EC2 instance (`m7i-flex.large`
 ├── bootstrap.py           # first run: Kafka topics + seed data into HDFS
 ├── start_platform.sh      # starts the containers in the right order
 ├── stop_platform.sh       # stops them safely
-├── requirements.txt
+├── requirements.txt       # pinned versions of the Python libraries
+├── docs/screenshots/      # images used in this README
 └── .env.example           # secrets template (copy to .env)
 ```
 
