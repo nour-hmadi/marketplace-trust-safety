@@ -24,6 +24,7 @@ x-airflow-common: &airflow-common
 services:
   # ---------- streaming ----------
   zookeeper:
+    restart: unless-stopped
     image: confluentinc/cp-zookeeper:7.4.0
     container_name: zookeeper
     environment:
@@ -35,6 +36,7 @@ services:
     ports: ["2181:2181"]
 
   kafka:
+    restart: unless-stopped
     image: confluentinc/cp-kafka:7.4.0
     container_name: kafka
     depends_on: [zookeeper]
@@ -50,6 +52,7 @@ services:
     ports: ["9092:9092"]
 
   kafka-ui:
+    restart: unless-stopped
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui
     depends_on: [kafka]
@@ -61,6 +64,7 @@ services:
 
   # ---------- storage ----------
   namenode:
+    restart: unless-stopped
     image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
     container_name: namenode
     environment:
@@ -71,6 +75,7 @@ services:
     ports: ["9870:9870", "9000:9000"]
 
   datanode:
+    restart: unless-stopped
     image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
     container_name: datanode
     depends_on: [namenode]
@@ -83,6 +88,7 @@ services:
 
   # ---------- processing ----------
   spark-master:
+    restart: unless-stopped
     image: bde2020/spark-master:3.3.0-hadoop3.3
     container_name: spark-master
     ports: ["8082:8080", "7077:7077"]
@@ -90,6 +96,7 @@ services:
       - ./spark_jobs:/opt/spark_jobs:ro   # the Spark jobs come straight from the repo
 
   spark-worker:
+    restart: unless-stopped
     image: bde2020/spark-worker:3.3.0-hadoop3.3
     container_name: spark-worker
     depends_on: [spark-master]
@@ -98,6 +105,7 @@ services:
 
   # ---------- orchestration ----------
   airflow-db:
+    restart: unless-stopped
     image: postgres:13
     container_name: airflow-db
     environment:
@@ -126,6 +134,7 @@ services:
         condition: service_healthy
 
   airflow-webserver:
+    restart: unless-stopped
     <<: *airflow-common
     container_name: airflow-webserver
     command: webserver
@@ -135,6 +144,7 @@ services:
         condition: service_completed_successfully
 
   airflow-scheduler:
+    restart: unless-stopped
     <<: *airflow-common
     container_name: airflow-scheduler
     command: scheduler
