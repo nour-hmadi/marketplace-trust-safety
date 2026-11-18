@@ -8,6 +8,10 @@ textColor = "#E5ECF6"
 borderColor = "#1F2C44"
 font = "IBM Plex Sans:https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
 baseRadius = "10px"
+# success messages and inline code in the theme's teal (Streamlit's default is green)
+greenColor = "#2DD4BF"
+greenTextColor = "#5EEAD4"
+greenBackgroundColor = "#0F2A30"
 
 [theme.sidebar]
 backgroundColor = "#0E1726"
