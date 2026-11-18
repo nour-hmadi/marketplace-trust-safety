@@ -12,6 +12,7 @@ from dashboard_page import dashboard_page
 from governance_page import governance_page
 
 st.set_page_config(page_title="Trust & Safety Platform", page_icon="🛡️", layout="wide")
+st.html("<style>[data-testid='stMainBlockContainer'] {padding-top: 2rem;}</style>")   # less empty space above the title
 
 API = "http://localhost:5000/api"
 
