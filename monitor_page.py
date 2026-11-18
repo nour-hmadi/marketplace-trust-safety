@@ -28,6 +28,7 @@ def last_write(rows):
 
 def pipeline_monitor_page():
     st.header("🔄 Pipeline Monitor")
+    st.info("Engineering view. A data engineer watches this page to check that every stage is healthy. It's open here so you can see how the pipeline works.")
     st.caption("Live status from each service's own API. Data moves left to right: "
                "Kafka → Airflow → HDFS raw → Spark → HDFS refined & curated.")
     if st.button("🔄 Refresh now"):

@@ -28,15 +28,40 @@ def about_section():
     c2.metric("Data-quality checks", 20)
     c3.metric("HDFS data layers", 3)
 
-    st.markdown("##### Try it")
-    st.markdown(
-        "| Role | Password | What you can do |\n"
-        "|---|---|---|\n"
-        "| Trust & Safety Analyst | `ts_admin` | Send events, run the pipeline, investigate sellers, view governance |\n"
-        "| Business Analyst | `biz_user` | Read-only view: seller names, regions and risk levels |"
-    )
-
     st.markdown("##### Built with")
     st.write("Kafka · HDFS · Spark (PySpark) · Airflow · Docker · AWS EC2 · Flask · Streamlit")
     st.caption("Built by **Nour Hmadi** · [GitHub repo](https://github.com/nour-hmadi/marketplace-trust-safety)"
                " · [LinkedIn](https://www.linkedin.com/in/nour-hmadi-b86a29438)")
+
+
+def demo_logins():
+    """Demo passwords, what each role does, and why the demo tools exist. Shown under the sign-in form."""
+    with st.container(border=True):
+        st.markdown("**Demo logins**")
+        st.markdown(
+            "| Role | Password |\n"
+            "|---|---|\n"
+            "| Trust & Safety Analyst | `ts_admin` |\n"
+            "| Business Analyst | `biz_user` |"
+        )
+
+    st.markdown("##### What each role does")
+    st.markdown(
+        "**Trust & Safety Analyst** · full access\n"
+        "- Investigates risky sellers: risk scores, fraud patterns and customer activity with masked IDs\n"
+        "- Checks data quality and privacy on the Governance page\n"
+        "\n"
+        "**Business Analyst** · read-only\n"
+        "- Sees each seller's name, region and risk level (HIGH, MEDIUM or LOW)\n"
+        "- No risk scores, customer data or pipeline controls"
+    )
+    st.caption("Each role sees only the data it needs (least privilege).")
+
+    st.markdown("##### Demo tools")
+    st.markdown(
+        "Added so you can watch the whole pipeline work (Trust & Safety login):\n"
+        "- **Event Producer** plays the marketplace: send orders, returns and complaints. "
+        "In a real company, these come from the marketplace itself.\n"
+        "- **Pipeline Monitor** and **Run Pipeline** are the data engineer's view: check each stage "
+        "and run the pipeline now. In production, Airflow runs it by itself every morning."
+    )

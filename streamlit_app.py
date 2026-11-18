@@ -4,7 +4,7 @@ from datetime import datetime
 import requests
 import streamlit as st
 
-from about_page import about_section
+from about_page import about_section, demo_logins
 
 from monitor_page import pipeline_monitor_page
 from pipeline_page import run_pipeline_page
@@ -44,6 +44,7 @@ def login_page():
     with sign_in:
         st.subheader("🔐 Sign in")
         login_form()
+        demo_logins()
 
 
 def login_form():
@@ -104,6 +105,7 @@ def returnable_orders(sid):
 
 def event_producer_page():
     st.header("📡 Event Producer")
+    st.info("Demo tool. In a real company, orders, returns and complaints come from the marketplace itself. Here you play the marketplace: send a few events, run the pipeline, and watch the risk scores change.")
     st.caption("Streamlit → Flask API → Kafka topic. Airflow moves new messages to HDFS raw every 10 minutes.")
     if st.context.headers.get("Host", "").startswith(("localhost", "127.0.0.1")):
         st.link_button("Open Kafka UI", "http://localhost:8080")

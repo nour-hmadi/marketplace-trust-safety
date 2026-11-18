@@ -72,6 +72,7 @@ def log_viewer(run_id):
 
 def run_pipeline_page():
     st.header("⚡ Run Pipeline")
+    st.info("Demo tool. In production, Airflow runs this pipeline by itself every morning. The button runs it now, so new events reach the dashboards in about 3 minutes.")
     st.caption("Streamlit → Airflow DAG `seller_risk_pipeline` → Flask Spark gateway → Spark → HDFS refined & curated. "
                "Airflow controls the order and the retries; Spark does the processing.")
     try:
