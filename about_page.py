@@ -28,6 +28,15 @@ def about_section():
     c2.metric("Data-quality checks", 20)
     c3.metric("HDFS data layers", 3)
 
+    st.markdown("##### Demo tools")
+    st.markdown(
+        "Added so you can watch the whole pipeline work (Trust & Safety login):\n"
+        "- **Event Producer** plays the marketplace: send orders, returns and complaints. "
+        "In a real company, these come from the marketplace itself.\n"
+        "- **Pipeline Monitor** and **Run Pipeline** are the data engineer's view: check each stage "
+        "and run the pipeline now. In production, Airflow runs it by itself every morning."
+    )
+
     st.markdown("##### Built with")
     st.write("Kafka · HDFS · Spark (PySpark) · Airflow · Docker · AWS EC2 · Flask · Streamlit")
     st.caption("Built by **Nour Hmadi** · [GitHub repo](https://github.com/nour-hmadi/marketplace-trust-safety)"
@@ -56,12 +65,3 @@ def demo_logins():
         "- No risk scores, customer data or pipeline controls"
     )
     st.caption("Each role sees only the data it needs (least privilege).")
-
-    st.markdown("##### Demo tools")
-    st.markdown(
-        "Added so you can watch the whole pipeline work (Trust & Safety login):\n"
-        "- **Event Producer** plays the marketplace: send orders, returns and complaints. "
-        "In a real company, these come from the marketplace itself.\n"
-        "- **Pipeline Monitor** and **Run Pipeline** are the data engineer's view: check each stage "
-        "and run the pipeline now. In production, Airflow runs it by itself every morning."
-    )
