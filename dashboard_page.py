@@ -7,7 +7,7 @@ import streamlit as st
 
 from data_access import read_parquet_folder
 
-LABEL_COLORS = {"HIGH": "#e74c3c", "MEDIUM": "#f39c12", "LOW": "#27ae60"}
+LABEL_COLORS = {"HIGH": "#E5484D", "MEDIUM": "#FAB219", "LOW": "#2DD4BF"}
 LABEL_ORDER = ["HIGH", "MEDIUM", "LOW"]
 BUSINESS_COLUMNS = ["seller_name", "region", "risk_label"]   # everything a Business Analyst may see
 LOCAL_TZ = datetime.now().astimezone().tzinfo

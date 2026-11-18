@@ -12,6 +12,13 @@ baseRadius = "10px"
 greenColor = "#2DD4BF"
 greenTextColor = "#5EEAD4"
 greenBackgroundColor = "#0F2A30"
+# info notes in a quiet slate (Streamlit's default is bright blue); links stay teal
+blueColor = "#94A3B8"
+blueTextColor = "#CBD5E1"
+blueBackgroundColor = "#16233A"
+linkColor = "#5EEAD4"
+# chart colors: teal first, in an order checked for color-blind safety on this dark background
+chartCategoricalColors = ["#11A797", "#d95926", "#3987e5", "#c98500", "#d55181", "#0ca30c", "#9085e9", "#e66767"]
 
 [theme.sidebar]
 backgroundColor = "#0E1726"

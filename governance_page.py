@@ -49,6 +49,7 @@ def governance_page():
             "rows": [m["raw_rows"], m["raw_rows"] - m["duplicates_removed"], m["refined_rows"]],
         })
         fig = px.funnel(stages, x="rows", y="stage", title=dataset)
+        fig.update_traces(textfont_color="#FFFFFF")
         fig.update_layout(height=260, margin=dict(l=10, r=10, t=40, b=10))
         column.plotly_chart(fig, key=f"funnel_{dataset}")
         share = m["duplicates_removed"] / m["raw_rows"] if m["raw_rows"] else 0
