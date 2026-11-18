@@ -5,14 +5,15 @@ import requests
 import streamlit as st
 
 from about_page import about_section, demo_logins
+from style import apply_style, hero
 
 from monitor_page import pipeline_monitor_page
 from pipeline_page import run_pipeline_page
 from dashboard_page import dashboard_page
 from governance_page import governance_page
 
-st.set_page_config(page_title="Trust & Safety Platform", page_icon="🛡️", layout="wide")
-st.html("<style>[data-testid='stMainBlockContainer'] {padding-top: 2rem;}</style>")   # less empty space above the title
+st.set_page_config(page_title="Trust & Safety Platform", page_icon=":material/shield:", layout="wide")
+apply_style()
 
 API = "http://localhost:5000/api"
 
@@ -38,21 +39,23 @@ def seller_id(option):
 
 # ---------- LOGIN ----------
 def login_page():
-    st.title("🛡️ Trust & Safety Analytics Platform")
+    hero()
     about, sign_in = st.columns([3, 2], gap="large")
     with about:
         about_section()
     with sign_in:
-        st.subheader("🔐 Sign in")
-        login_form()
+        with st.container(border=True):
+            st.subheader(":primary[:material/badge:] Sign in")
+            login_form()
         demo_logins()
 
 
 def login_form():
-    st.caption("Secure access portal. Your role decides what data you can see.")
-    role = st.selectbox("Role", list(HASHES.keys()))
-    password = st.text_input("Password", type="password")
-    if st.button("Access Platform"):
+    st.caption("Your role decides what data you can see (least privilege).")
+    left, right = st.columns(2)
+    role = left.selectbox("Role", list(HASHES.keys()))
+    password = right.text_input("Password", type="password")
+    if st.button("Access Platform", type="primary", width="stretch"):
         if sha256(password) == HASHES[role]:
             st.session_state["role"] = role
             st.rerun()
@@ -79,7 +82,7 @@ def log_event(event_type, result):
         "type": event_type,
         "event_id": event_id,
         "seller": event["seller_id"],
-        "kafka": "✅ sent" if result["kafka_sent"] else "❌ failed",
+        "kafka": "✓ sent" if result["kafka_sent"] else "✕ failed",
     })
 
 
@@ -105,7 +108,7 @@ def returnable_orders(sid):
 
 
 def event_producer_page():
-    st.header("📡 Event Producer")
+    st.header(":primary[:material/sensors:] Event Producer")
     st.info("Demo tool. In a real company, orders, returns and complaints come from the marketplace itself. Here you play the marketplace: send a few events, run the pipeline, and watch the risk scores change.")
     st.caption("Streamlit → Flask API → Kafka topic. Airflow moves new messages to HDFS raw every 10 minutes.")
     if st.context.headers.get("Host", "").startswith(("localhost", "127.0.0.1")):
@@ -116,7 +119,7 @@ def event_producer_page():
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.subheader("📦 Order")
+        st.subheader(":primary[:material/shopping_cart:] Order")
         with st.form("order_form"):
             seller = st.selectbox("Seller", SELLER_OPTIONS, key="order_seller")
             amount = st.number_input("Amount ($)", min_value=1.0, max_value=9999.0, value=150.0, key="order_amount")
@@ -129,7 +132,7 @@ def event_producer_page():
                     log_event("ORDER", result)
 
     with col2:
-        st.subheader("↩️ Return")
+        st.subheader(":primary[:material/assignment_return:] Return")
         seller = st.selectbox("Seller", SELLER_OPTIONS, key="return_seller")
         orders = returnable_orders(seller_id(seller))
         with st.form("return_form"):
@@ -144,7 +147,7 @@ def event_producer_page():
                     st.session_state.setdefault("returned_orders", set()).add(order)
 
     with col3:
-        st.subheader("⚠️ Complaint")
+        st.subheader(":primary[:material/report:] Complaint")
         with st.form("complaint_form"):
             seller = st.selectbox("Seller", SELLER_OPTIONS, key="complaint_seller")
             severity = st.selectbox("Severity", ["high", "medium", "low"], key="complaint_severity")
@@ -169,27 +172,29 @@ def main_page():
     role = st.session_state["role"]
     is_ts = role == "Trust & Safety Analyst"
 
-    st.sidebar.title("🛡️ Platform")
+    st.sidebar.title(":primary[:material/shield:] Platform")
     st.sidebar.write(f"Logged in as: **{role}**")
-    st.sidebar.caption("🕒 Times are shown in Beirut time. Airflow run IDs use UTC.")
+    st.sidebar.caption(":material/schedule: Times are shown in Beirut time. Airflow run IDs use UTC.")
     if st.sidebar.button("Sign out"):
         st.session_state.clear()
         st.rerun()
 
-    st.title("🛡️ Trust & Safety Analytics Platform")
+    hero()
 
     if is_ts:
         st.success("Full access: risk scores, fraud patterns, customer investigation, event producer.")
-        page = st.sidebar.radio("Navigate", ["📡 Event Producer", "🔄 Pipeline Monitor", "⚡ Run Pipeline", "📊 Risk Dashboard", "🛡️ Governance"])
-        if page == "📡 Event Producer":
+        pages = {"Event Producer": "sensors", "Pipeline Monitor": "monitor_heart", "Run Pipeline": "bolt",
+                 "Risk Dashboard": "insights", "Governance": "policy"}
+        page = st.sidebar.radio("Navigate", list(pages), format_func=lambda p: f":material/{pages[p]}: {p}")
+        if page == "Event Producer":
             event_producer_page()
-        elif page == "🔄 Pipeline Monitor":
+        elif page == "Pipeline Monitor":
             pipeline_monitor_page()
-        elif page == "⚡ Run Pipeline":
+        elif page == "Run Pipeline":
             run_pipeline_page()
-        elif page == "📊 Risk Dashboard":
+        elif page == "Risk Dashboard":
             dashboard_page(is_ts=True)
-        elif page == "🛡️ Governance":
+        elif page == "Governance":
             governance_page()
     else:
         st.info("Restricted access: seller names, regions and risk labels only.")

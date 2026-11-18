@@ -1,0 +1,16 @@
+# Midnight Teal theme (extra styles in style.py)
+[theme]
+base = "dark"
+primaryColor = "#2DD4BF"
+backgroundColor = "#0B1220"
+secondaryBackgroundColor = "#111B2E"
+textColor = "#E5ECF6"
+borderColor = "#1F2C44"
+font = "IBM Plex Sans:https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+baseRadius = "10px"
+
+[theme.sidebar]
+backgroundColor = "#0E1726"
+textColor = "#E5ECF6"
+secondaryBackgroundColor = "#111B2E"
+borderColor = "#1F2C44"

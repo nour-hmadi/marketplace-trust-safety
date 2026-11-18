@@ -5,21 +5,21 @@ import streamlit as st
 
 from dashboard_page import load, to_local
 
-STATUS_LABEL = {"pass": "✅ pass", "fail": "❌ fail", "warning": "⚠️ warning"}
+STATUS_LABEL = {"pass": "✓ pass", "fail": "✕ fail", "warning": "▲ warning"}
 FUNNEL_DATASETS = ["orders", "returns", "complaints"]
 ACCESS_MATRIX = pd.DataFrame([
-    {"data": "Seller name, region, risk label", "Trust & Safety Analyst": "✅", "Business Analyst": "✅"},
-    {"data": "Risk scores, return and complaint rates", "Trust & Safety Analyst": "✅", "Business Analyst": "❌"},
-    {"data": "Fraud patterns and risk trend", "Trust & Safety Analyst": "✅", "Business Analyst": "❌"},
-    {"data": "Customer activity (masked IDs)", "Trust & Safety Analyst": "✅", "Business Analyst": "❌"},
-    {"data": "Real customer IDs", "Trust & Safety Analyst": "❌", "Business Analyst": "❌"},
-    {"data": "Event producer, pipeline monitor and runs", "Trust & Safety Analyst": "✅", "Business Analyst": "❌"},
+    {"data": "Seller name, region, risk label", "Trust & Safety Analyst": "✓", "Business Analyst": "✓"},
+    {"data": "Risk scores, return and complaint rates", "Trust & Safety Analyst": "✓", "Business Analyst": "✕"},
+    {"data": "Fraud patterns and risk trend", "Trust & Safety Analyst": "✓", "Business Analyst": "✕"},
+    {"data": "Customer activity (masked IDs)", "Trust & Safety Analyst": "✓", "Business Analyst": "✕"},
+    {"data": "Real customer IDs", "Trust & Safety Analyst": "✕", "Business Analyst": "✕"},
+    {"data": "Event producer, pipeline monitor and runs", "Trust & Safety Analyst": "✓", "Business Analyst": "✕"},
 ])
 
 
 def governance_page():
-    st.header("🛡️ Data Governance")
-    if st.button("🔄 Reload from HDFS", key="reload_governance"):
+    st.header(":primary[:material/policy:] Data Governance")
+    if st.button("Reload from HDFS", icon=":material/refresh:", key="reload_governance"):
         st.cache_data.clear()
     try:
         dq = load("/data/curated/data_quality")

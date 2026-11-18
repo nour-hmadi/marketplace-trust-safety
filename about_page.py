@@ -4,12 +4,27 @@ import streamlit as st
 PIPELINE = """
 digraph {
   rankdir=LR; bgcolor="transparent";
-  node [shape=box, style="rounded,filled", fillcolor="#E8EEF7", color="#5B6C8F", fontname="Helvetica", fontsize=11];
-  edge [color="#8A94A6"];
+  node [shape=box, style="rounded,filled", fillcolor="#16233A", color="#2DD4BF", fontcolor="#E5ECF6",
+        fontname="Helvetica", fontsize=11, penwidth=1.4];
+  edge [color="#5EEAD4", penwidth=1.4];
   app [label="Streamlit\\nevents"]; kafka [label="Kafka\\n3 topics"]; airflow [label="Airflow\\n2 DAGs"];
   raw [label="HDFS\\nraw"]; spark [label="Spark\\n8 jobs"]; curated [label="HDFS refined\\n& curated"]; dash [label="Risk\\ndashboards"];
   app -> kafka -> airflow -> raw -> spark -> curated -> dash;
 }
+"""
+
+TECH = ["Kafka", "HDFS", "Spark (PySpark)", "Airflow", "Docker", "AWS EC2", "Flask", "Streamlit"]
+
+ROLES = """
+<table class="ts-roles">
+  <thead><tr><th>Role</th><th>Password</th><th>Access</th></tr></thead>
+  <tbody>
+    <tr><td>Trust &amp; Safety Analyst</td><td><code>ts_admin</code></td><td>Full</td></tr>
+    <tr class="ts-does"><td colspan="3">Investigates risky sellers, checks data quality, uses the demo tools.</td></tr>
+    <tr><td>Business Analyst</td><td><code>biz_user</code></td><td>Read-only</td></tr>
+    <tr class="ts-does"><td colspan="3">Sees seller names, regions and risk levels only.</td></tr>
+  </tbody>
+</table>
 """
 
 
@@ -30,38 +45,16 @@ def about_section():
 
     st.markdown("##### Demo tools")
     st.markdown(
-        "Added so you can watch the whole pipeline work (Trust & Safety login):\n"
-        "- **Event Producer** plays the marketplace: send orders, returns and complaints. "
-        "In a real company, these come from the marketplace itself.\n"
-        "- **Pipeline Monitor** and **Run Pipeline** are the data engineer's view: check each stage "
-        "and run the pipeline now. In production, Airflow runs it by itself every morning."
+        "- **Event Producer** plays the marketplace. In production, events come from the marketplace itself.\n"
+        "- **Pipeline Monitor** and **Run Pipeline** are the engineer's view. In production, Airflow runs it daily."
     )
 
     st.markdown("##### Built with")
-    st.write("Kafka · HDFS · Spark (PySpark) · Airflow · Docker · AWS EC2 · Flask · Streamlit")
-    st.caption("Built by **Nour Hmadi** · [GitHub repo](https://github.com/nour-hmadi/marketplace-trust-safety)"
-               " · [LinkedIn](https://www.linkedin.com/in/nour-hmadi-b86a29438)")
+    st.html('<div class="ts-chips">' + "".join(f"<span>{name}</span>" for name in TECH) + "</div>")
 
 
 def demo_logins():
-    """Demo passwords, what each role does, and why the demo tools exist. Shown under the sign-in form."""
+    """One table under the sign-in form: role, password, access, and what each role does."""
     with st.container(border=True):
         st.markdown("**Demo logins**")
-        st.markdown(
-            "| Role | Password |\n"
-            "|---|---|\n"
-            "| Trust & Safety Analyst | `ts_admin` |\n"
-            "| Business Analyst | `biz_user` |"
-        )
-
-    st.markdown("##### What each role does")
-    st.markdown(
-        "**Trust & Safety Analyst** · full access\n"
-        "- Investigates risky sellers: risk scores, fraud patterns and customer activity with masked IDs\n"
-        "- Checks data quality and privacy on the Governance page\n"
-        "\n"
-        "**Business Analyst** · read-only\n"
-        "- Sees each seller's name, region and risk level (HIGH, MEDIUM or LOW)\n"
-        "- No risk scores, customer data or pipeline controls"
-    )
-    st.caption("Each role sees only the data it needs (least privilege).")
+        st.html(ROLES)

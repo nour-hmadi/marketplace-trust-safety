@@ -27,11 +27,11 @@ def last_write(rows):
 
 
 def pipeline_monitor_page():
-    st.header("🔄 Pipeline Monitor")
+    st.header(":primary[:material/monitor_heart:] Pipeline Monitor")
     st.info("Engineering view. A data engineer watches this page to check that every stage is healthy. It's open here so you can see how the pipeline works.")
     st.caption("Live status from each service's own API. Data moves left to right: "
                "Kafka → Airflow → HDFS raw → Spark → HDFS refined & curated.")
-    if st.button("🔄 Refresh now"):
+    if st.button("Refresh now", icon=":material/refresh:"):
         st.cache_data.clear()
 
     kafka, kafka_error = load("kafka_status")
@@ -81,7 +81,7 @@ def pipeline_monitor_page():
             st.caption(f"Last write: {last_write(curated)}")
 
     # ----- action -----
-    if st.button("▶ Trigger Airflow ingestion now"):
+    if st.button("Trigger Airflow ingestion now", icon=":material/play_arrow:"):
         try:
             run_id = ps.trigger_ingestion()
             st.cache_data.clear()

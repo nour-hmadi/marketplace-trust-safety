@@ -4,9 +4,9 @@ import streamlit as st
 import pipeline_status as ps
 
 ACTIVE_STATES = ("queued", "running")
-STATE_LABEL = {"success": "✅ success", "running": "⏳ running", "queued": "🕒 queued",
-               "scheduled": "🕒 scheduled", "failed": "❌ failed", "up_for_retry": "🔁 retrying",
-               "upstream_failed": "⛔ skipped (earlier job failed)"}
+STATE_LABEL = {"success": "✓ success", "running": "● running", "queued": "○ queued",
+               "scheduled": "○ scheduled", "failed": "✕ failed", "up_for_retry": "↻ retrying",
+               "upstream_failed": "– skipped (earlier job failed)"}
 JOB_INFO = {
     "normalize_orders": "Raw orders → refined: fix types, lowercase text, drop invalid amounts, remove duplicates",
     "normalize_returns": "Raw returns → refined: clean and remove duplicate returns",
@@ -42,7 +42,7 @@ def progress_panel(run_id, was_active):
         task = tasks.get(job, {})
         duration = task.get("duration")
         rows.append({"step": step, "Spark job": job,
-                     "status": STATE_LABEL.get(task.get("state"), "⚪ waiting"),
+                     "status": STATE_LABEL.get(task.get("state"), "○ waiting"),
                      "seconds": round(duration) if duration else None,
                      "what it does": JOB_INFO[job]})
     st.dataframe(rows, hide_index=True)
@@ -57,7 +57,7 @@ def progress_panel(run_id, was_active):
 
 
 def log_viewer(run_id):
-    with st.expander("📜 Airflow log of one job"):
+    with st.expander("Airflow log of one job", icon=":material/description:"):
         job = st.selectbox("Job", ps.PROCESSING_JOBS, key="log_job")
         try:
             task = ps.task_instances(ps.PROCESSING_DAG, run_id).get(job)
@@ -71,7 +71,7 @@ def log_viewer(run_id):
 
 
 def run_pipeline_page():
-    st.header("⚡ Run Pipeline")
+    st.header(":primary[:material/bolt:] Run Pipeline")
     st.info("Demo tool. In production, Airflow runs this pipeline by itself every morning. The button runs it now, so new events reach the dashboards in about 3 minutes.")
     st.caption("Streamlit → Airflow DAG `seller_risk_pipeline` → Flask Spark gateway → Spark → HDFS refined & curated. "
                "Airflow controls the order and the retries; Spark does the processing.")
@@ -87,7 +87,7 @@ def run_pipeline_page():
     if busy:
         st.session_state["pipeline_run"] = busy
         st.info("A pipeline run is already in progress. Follow it below, then refresh the page to run it again.")
-    if st.button("⚡ Run the full pipeline now", type="primary", disabled=bool(busy)):
+    if st.button("Run the full pipeline now", icon=":material/bolt:", type="primary", disabled=bool(busy)):
         try:
             st.session_state["pipeline_run"] = ps.trigger_dag(ps.PROCESSING_DAG)
         except Exception as error:

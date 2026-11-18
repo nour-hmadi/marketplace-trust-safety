@@ -41,7 +41,7 @@ def analyst_view(risk):
         },
     )
 
-    st.subheader("🚨 Fraud patterns")
+    st.subheader(":primary[:material/gpp_maybe:] Fraud patterns")
     patterns = load("/data/curated/fraud_patterns")
     if patterns.empty:
         st.success("No seller crosses a fraud threshold.")
@@ -57,7 +57,7 @@ def analyst_view(risk):
             },
         )
 
-    st.subheader("📈 Risk trend per pipeline run")
+    st.subheader(":primary[:material/trending_up:] Risk trend per pipeline run")
     history = load("/data/curated/risk_history")
     if history.empty:
         st.info("No history yet. Each pipeline run adds one point per seller.")
@@ -72,7 +72,7 @@ def analyst_view(risk):
         st.plotly_chart(fig)
         st.caption(f"{history['scored_at'].nunique()} pipeline run(s) recorded in /data/curated/risk_history.")
 
-    st.subheader("🗺️ Average risk by region")
+    st.subheader(":primary[:material/public:] Average risk by region")
     region = (risk.groupby("region")
               .agg(average_risk_index=("risk_index", "mean"), sellers=("seller_id", "count"))
               .reset_index().sort_values("average_risk_index", ascending=False))
@@ -91,15 +91,15 @@ def business_view(risk):
     st.subheader("Sellers by risk level")
     st.dataframe(visible, hide_index=True)
 
-    st.subheader("🗺️ Risk levels by region")
+    st.subheader(":primary[:material/public:] Risk levels by region")
     by_region = visible.groupby(["region", "risk_label"]).size().reset_index(name="sellers")
     st.plotly_chart(px.bar(by_region, x="region", y="sellers", color="risk_label",
                            color_discrete_map=LABEL_COLORS, category_orders={"risk_label": LABEL_ORDER}))
 
 
 def dashboard_page(is_ts):
-    st.header("📊 Risk Dashboard")
-    if st.button("🔄 Reload from HDFS"):
+    st.header(":primary[:material/insights:] Risk Dashboard")
+    if st.button("Reload from HDFS", icon=":material/refresh:"):
         st.cache_data.clear()
     try:
         risk = load("/data/curated/seller_risk")
@@ -128,7 +128,7 @@ def dashboard_page(is_ts):
 
 
 def investigation_view(risk):
-    st.subheader("🔍 Seller investigation")
+    st.subheader(":primary[:material/search:] Seller investigation")
     st.caption("Customers of one seller, from /data/curated/customer_activity. Customer IDs are masked in Spark "
                "with a salted SHA-256 hash, so the real IDs never reach this screen.")
     names = risk.set_index("seller_id")["seller_name"]
@@ -150,8 +150,8 @@ def investigation_view(risk):
 
     def flag(row):
         if row.counterfeit_returns > 0:
-            return "🚨 counterfeit returns"
-        return "⚠️ returns half of orders" if row.return_rate >= 0.5 else ""
+            return "✕ counterfeit returns"
+        return "▲ returns half of orders" if row.return_rate >= 0.5 else ""
 
     shown = customers.assign(customer=customers["customer_masked"].str[:12] + "…",
                              flag=customers.apply(flag, axis=1))
